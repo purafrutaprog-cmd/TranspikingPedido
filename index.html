@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Transpiking W.P. Global, S.L — Pedidos</title>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root{
+    --pri:#2563eb;
+    --danger:#dc2626;
+    --bg:#f5f6f8;
+    --card:#fff;
+    --bd:#e5e7eb;
+    --tx:#111;
+    --mut:#666;
+    --r:6px;
+  }
+
+/* Logo + datos empresa en la misma línea */
+.encabezado-empresa{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+}
+
+.logo-factura{
+  max-width:140px;   /* ajusta si lo quieres más grande/pequeño */
+  height:auto;
+}
+
+
+/* Alinear logo + título si quieres */
+.factura-encabezado{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);margin:0;padding:18px;color:var(--tx)}
+  .tabs{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}
+  .tab{padding:10px 14px;border:1px solid var(--bd);border-radius:var(--r);background:#fff;cursor:pointer}
+  .tab.active{background:var(--pri);border-color:var(--pri);color:#fff}
+  .box{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin:0 0 12px;overflow:visible}
+  h2,h3{margin:0 0 10px}
+  label{display:block;margin-top:10px;font-size:13px;color:#374151}
+  input,select,textarea{width:100%;max-width:100%;padding:9px;border:1px solid #d1d5db;border-radius:var(--r);margin-top:4px;font-size:15px;background:#fff}
+  textarea{min-height:70px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .linea-add{display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:end}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  button{padding:10px 12px;border:0;border-radius:var(--r);cursor:pointer;font-size:15px;background:#111;color:#fff;margin:0}
+  button.primary{background:var(--pri)}
+  button.danger{background:var(--danger)}
+  button.ghost{background:#fff;color:#111;border:1px solid var(--bd)}
+  button:hover{opacity:.92}
+  .muted{color:var(--mut);font-size:13px}
+  .right{text-align:right}
+  .pill{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:999px;padding:2px 8px;font-size:12px;margin-left:6px}
+  table{width:100%;border-collapse:collapse;margin-top:10px}
+  th,td{border-bottom:1px solid #eee;padding:8px;vertical-align:top}
+  th{background:#f3f4f6;text-align:left;color:#374151}
+  .hidden{display:none}
+
+  @media (max-width: 600px){
+    .row{grid-template-columns:1fr}
+    .linea-add{grid-template-columns:1fr}
+  }
+
+  /* imprimir solo la pestaña visible */
+  @media print{
+    .tabs,.no-print{display:none !important;}
+    body{background:#fff;padding:0}
+    .box{border:0;border-radius:0}
+  }
+
+button.print{
+  background:#16a34a;   /* verde */
+  color:#fff;
+}
+/* Contenedor de los dos boxes (cliente / empresa) */
+.encabezado-datos{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Empresa con logo alineado */
+.empresa-con-logo{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.logo-factura{
+  max-width: 190px;   /* más compacto */
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* RESPONSIVE: en móvil se apilan */
+@media (max-width: 600px){
+  .encabezado-datos{
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- TABS -->
+<div class="tabs no-print">
+  <div class="tab active" data-tab="pedido" onclick="cambiarTab('pedido')">Pedido</div>
+  <div class="tab" data-tab="hoja" onclick="cambiarTab('hoja')">Hoja de pedido</div>
+  <div class="tab" data-tab="factura" onclick="cambiarTab('factura')">Factura</div>
+</div>
+
+<!-- PEDIDO -->
+<section id="tab-pedido" class="box">
+  <h2>Pedido</h2>
+  <div class="muted">Rellena cliente, añade productos y luego genera hoja de pedido.</div>
+
+  <h3 style="margin-top:14px">Cliente</h3>
+  <div class="row">
+    <div>
+      <label>Nombre</label>
+      <input id="cliNombre" placeholder="Nombre cliente">
+    </div>
+    <div>
+      <label>Teléfono</label>
+      <input id="cliTel" placeholder="Teléfono">
+    </div>
+  </div>
+
+  <label>Dirección</label>
+  <input id="cliDir" placeholder="Dirección cliente">
+
+  <div class="row">
+    <div>
+      <label>Código postal</label>
+      <input id="cliCP" placeholder="Código postal">
+    </div>
+    <div>
+      <label>CIF/NIF</label>
+      <input id="cliCIF" placeholder="CIF/NIF">
+    </div>
+  </div>
+
+  <label>Observaciones</label>
+  <textarea id="cliObs" placeholder="Notas del pedido (opcional)"></textarea>
+
+  <h3 style="margin-top:14px">Añadir producto</h3>
+
+  <div class="linea-add">
+    <div>
+      <label>Producto</label>
+      <select id="selProducto"></select>
+    </div>
+    <div>
+      <label>Cantidad</label>
+      <input id="selCantidad" type="number" min="1" value="1">
+    </div>
+  </div>
+
+  <div class="btns no-print">
+    <button class="ghost" onclick="addProducto()">Añadir producto</button>
+    <button class="primary" onclick="generarHoja()">Hoja de Pedido</button>
+    <button class="danger" onclick="nuevoPedido()">Nuevo pedido</button>
+  </div>
+
+  <h3 style="margin-top:14px">Productos añadidos (editable)</h3>
+  <div id="pedidoTabla" class="muted">Aún no hay productos añadidos.</div>
+</section>
+
+<!-- HOJA -->
+<section id="tab-hoja" class="hidden box">
+  <h2>Hoja de pedido</h2>
+  <div id="printHoja"></div>
+
+  <div class="btns no-print">
+    <button class="print" onclick="window.print()">Imprimir / Descargar PDF</button>
+    <button class="ghost" onclick="cambiarTab('pedido')">Volver</button>
+    <button class="primary" onclick="generarFactura()">Ir a factura</button>
+    <button class="danger" onclick="nuevoPedido()">Nuevo pedido</button>
+  </div>
+</section>
+
+<!-- FACTURA -->
+<section id="tab-factura" class="hidden box">
+  <h2>Factura</h2>
+  <div id="printFactura"></div>
+
+  <div class="btns no-print">
+    <button class="print" onclick="window.print()">Imprimir / Descargar PDF</button>
+    <button class="ghost" onclick="cambiarTab('pedido')">Volver</button>
+    <button class="danger" onclick="nuevoPedido()">Nuevo pedido</button>
+  </div>
+</section>
+
+<script>
+/* ========= EMPRESA (FIJA) ========= */
+const EMPRESA = {
+  nombre: "Transpiking W.P. Global, S.L",
+  direccion: "CL san sebatian 62 ENT 1",
+  cp: "08030 Barcelona",
+  cif: "B22613558"
+};
+
+/* ========= IVA (SIEMPRE INCLUIDO EN PRECIO) ========= */
+const IVA_PCT = 10;
+
+/* ========= PROMO HELADOS =========
+   Si total helados (sumando todos los helados) >= 100:
+   cada helado se cobra a 0.95 €
+*/
+const HELADOS_UMBRAL = 100;
+const HELADOS_PRECIO_PROMO = 0.95;
+
+/* ========= CATÁLOGO FIJO (NO EDITABLE DESDE LA APP) ========= */
+const CATALOGO = [
+  { id:"P1", tipo:"Helados", nombre:"Coco Fresa", precio:1.00 },
+  { id:"P2", tipo:"Helados", nombre:"Coco Piña", precio:1.00 },
+  { id:"P3", tipo:"Helados", nombre:"Coco", precio:1.00 },
+  { id:"P4", tipo:"Helados", nombre:"Fresa", precio:1.00 },
+  { id:"P5", tipo:"Helados", nombre:"Maracuya", precio:1.00 },
+  { id:"P6", tipo:"Helados", nombre:"Piña", precio:1.00 },
+  { id:"P7", tipo:"Helados", nombre:"Mango", precio:1.00 },
+  { id:"P8", tipo:"Helados", nombre:"Lulo", precio:1.00 },
+  { id:"P9", tipo:"Helados", nombre:"Mora", precio:1.00 },
+  { id:"P10", tipo:"Helados", nombre:"Tutifruti", precio:1.00 },
+  { id:"P11", tipo:"Helados", nombre:"Guayaba", precio:1.00 },
+  { id:"P12", tipo:"Helados", nombre:"Guanabana", precio:1.00 },
+  { id:"P13", tipo:"Helados", nombre:"Queso", precio:1.00 },
+  { id:"P14", tipo:"Helados", nombre:"Dulce de leche", precio:1.00 },
+  { id:"P15", tipo:"Helados", nombre:"Maní", precio:1.00 },
+  { id:"P16", tipo:"Helados", nombre:"Chocolate", precio:1.00 },
+  { id:"P17", tipo:"Helados", nombre:"Mango Verde", precio:1.00 },
+  { id:"P18", tipo:"Helados", nombre:"Lucuma", precio:1.00 },
+
+  { id:"P19", tipo:"Arepas", nombre:"Arepa Blanca (La Victoria)", precio:1.80 },
+  { id:"P20", tipo:"Arepas", nombre:"Arepa Maiz Amarillo (La Victoria)", precio:1.80 },
+  { id:"P21", tipo:"Arepas", nombre:"Arepa Queso (La Victoria)", precio:3.50 },
+  { id:"P22", tipo:"Arepas", nombre:"Arepa de Choclo (La Victoria)", precio:3.50 },
+  { id:"P23", tipo:"Arepas", nombre:"Arepa de Yuca con queso (La Victoria)", precio:3.50 },
+
+  { id:"P24", tipo:"Embutidos", nombre:"Salami Especial Dominicano 1KG (Iduveca)", precio:8.95 },
+  { id:"P25", tipo:"Embutidos", nombre:"Salami Especial Dominicano 500GR (Indiveca)", precio:4.85 },
+  { id:"P26", tipo:"Embutidos", nombre:"Chorizo Colombiano 500GR (La Victoria)", precio:4.80 },
+
+  { id:"P27", tipo:"Lacteos", nombre:"Queso Fresco Latino 300GR", precio:2.65 },
+  { id:"P28", tipo:"Lacteos", nombre:"Queso Fresco Latino 800GR", precio:6.60 },
+  { id:"P29", tipo:"Arepas", nombre:"Arepas de Maiz con Queso (SEJOA)", precio:3.50 },
+
+  { id:"P30", tipo:"Embutidos", nombre:"Chorizo Cervezero Ecuatoriano", precio:4.95 },
+  { id:"P31", tipo:"Embutidos", nombre:"Salchicha Huachana", precio:4.95 },
+
+  { id:"P32", tipo:"Bebidas", nombre:"Chicha Morada 1L", precio:4.70 },
+  { id:"P33", tipo:"Lacteos", nombre:"Nata-Mantequilla Centroamericana 450GR", precio:4.60 },
+
+  { id:"P34", tipo:"Embutidos", nombre:"Salami Especial Dominicano 1KG (Iduveca) x12und", precio:107.40 },
+  { id:"P35", tipo:"Embutidos", nombre:"Salami Especial Dominicano 500GR (Iduveca)x24und", precio:116.40 },
+  { id:"P36", tipo:"Lacteos", nombre:"Nata-Mantequilla Centroamericana 450GR x12und", precio:55.20 },
+];
+
+/* ========= ESTADO ========= */
+let pedido = []; // líneas: {id,tipo,nombre,precio,cantidad}
+let cliente = null;
+
+/* ========= HELPERS ========= */
+const eur = (n)=> Number(n||0).toFixed(2)+" €";
+const esc = (s)=> String(s||"")
+  .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+
+function hoyISO(){
+  const d=new Date();
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  const dd=String(d.getDate()).padStart(2,"0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+/* ========= INICIO ========= */
+document.addEventListener("DOMContentLoaded", ()=>{
+  cargarCatalogoSelect();
+  renderPedidoTabla();
+});
+
+/* ========= CARGAR SELECT ========= */
+function cargarCatalogoSelect(){
+  const sel = document.getElementById("selProducto");
+  sel.innerHTML = "";
+
+  const tipos = [...new Set(CATALOGO.map(p=>p.tipo))].sort((a,b)=>a.localeCompare(b));
+  tipos.forEach(tipo=>{
+    const og=document.createElement("optgroup");
+    og.label=tipo;
+    CATALOGO.filter(p=>p.tipo===tipo).sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(p=>{
+      const opt=document.createElement("option");
+      opt.value=p.id;
+      opt.textContent = `${p.nombre} — ${eur(p.precio)}`;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+}
+
+/* ========= AÑADIR PRODUCTO (SUMA SI EXISTE) ========= */
+function addProducto(){
+  const id = document.getElementById("selProducto").value;
+  const cant = parseInt(document.getElementById("selCantidad").value || "0", 10);
+  if(!id || !cant || cant < 1) return;
+
+  const prod = CATALOGO.find(p=>p.id===id);
+  if(!prod) return;
+
+  const existente = pedido.find(l=>l.id===id);
+  if(existente){
+    existente.cantidad += cant;
+  } else {
+    pedido.push({...prod, cantidad:cant});
+  }
+  renderPedidoTabla();
+}
+
+/* ========= TABLA EDITABLE ========= */
+function renderPedidoTabla(){
+  const cont = document.getElementById("pedidoTabla");
+  if(!pedido.length){
+    cont.innerHTML = `<div class="muted">Aún no hay productos añadidos.</div>`;
+    return;
+  }
+
+  let html = `<table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Tipo</th>
+        <th class="right">Precio</th>
+        <th class="right">Cantidad</th>
+        <th class="right">Importe</th>
+        <th class="right">Acción</th>
+      </tr>
+    </thead><tbody>`;
+
+  pedido.forEach((l, idx)=>{
+    html += `<tr>
+      <td>
+        <select data-idx="${idx}" class="line-prod">
+          ${CATALOGO.map(p=>`<option value="${p.id}" ${p.id===l.id?'selected':''}>${esc(p.nombre)} — ${eur(p.precio)}</option>`).join("")}
+        </select>
+      </td>
+      <td>${esc(l.tipo)}</td>
+      <td class="right">${eur(l.precio)}</td>
+      <td class="right"><input data-idx="${idx}" class="line-cant" type="number" min="1" value="${l.cantidad}" style="max-width:120px"></td>
+      <td class="right">${eur(l.precio*l.cantidad)}</td>
+      <td class="right"><button class="danger line-del" data-idx="${idx}" style="padding:7px 10px">Eliminar</button></td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  cont.innerHTML = html;
+
+  // eventos cantidad
+  cont.querySelectorAll(".line-cant").forEach(inp=>{
+    inp.addEventListener("input", (e)=>{
+      const i = parseInt(e.target.dataset.idx,10);
+      const v = parseInt(e.target.value||"1",10);
+      pedido[i].cantidad = Math.max(1, isNaN(v)?1:v);
+      renderPedidoTabla();
+    });
+  });
+
+  // eventos eliminar
+  cont.querySelectorAll(".line-del").forEach(btn=>{
+    btn.addEventListener("click",(e)=>{
+      const i = parseInt(e.target.dataset.idx,10);
+      pedido.splice(i,1);
+      renderPedidoTabla();
+    });
+  });
+
+  // eventos cambiar producto (y fusionar si ya existe)
+  cont.querySelectorAll(".line-prod").forEach(sel=>{
+    sel.addEventListener("change",(e)=>{
+      const i = parseInt(e.target.dataset.idx,10);
+      const nuevoId = e.target.value;
+      const prod = CATALOGO.find(p=>p.id===nuevoId);
+      if(!prod) return;
+
+      const cantidad = pedido[i].cantidad;
+      // si ya hay otra línea con ese producto, fusionar
+      const j = pedido.findIndex((x, idx)=> idx!==i && x.id===nuevoId);
+      if(j >= 0){
+        pedido[j].cantidad += cantidad;
+        pedido.splice(i,1);
+      } else {
+        pedido[i] = {...prod, cantidad};
+      }
+      renderPedidoTabla();
+    });
+  });
+}
+
+/* ========= CLIENTE ========= */
+function guardarCliente(){
+  cliente = {
+    nombre: document.getElementById("cliNombre").value.trim(),
+    direccion: document.getElementById("cliDir").value.trim(),
+    cp: document.getElementById("cliCP").value.trim(),
+    tel: document.getElementById("cliTel").value.trim(),
+    cif: document.getElementById("cliCIF").value.trim(),
+    obs: document.getElementById("cliObs").value.trim(),
+    fecha: hoyISO()
+  };
+}
+
+/* ========= PROMO HELADOS (>=100 => 0,95€/ud) ========= */
+function descuentoHelados(){
+  const helados = pedido.filter(l=>String(l.tipo||"").toLowerCase()==="helados");
+  const totalQty = helados.reduce((s,l)=>s + Number(l.cantidad||0), 0);
+
+  if(totalQty < HELADOS_UMBRAL) return { aplica:false, totalQty, descuento:0 };
+
+  let descuento = 0;
+  for(const l of helados){
+    const diff = Number(l.precio) - HELADOS_PRECIO_PROMO;
+    if(diff > 0) descuento += diff * Number(l.cantidad||0);
+  }
+  return { aplica:true, totalQty, descuento };
+}
+
+/* ========= DOCUMENTOS ========= */
+function generarHoja(){
+  guardarCliente();
+  cambiarTab("hoja");
+}
+function generarFactura(){
+  guardarCliente();
+  cambiarTab("factura");
+}
+
+function cambiarTab(tab){
+  // tabs
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.classList.toggle("active", t.dataset.tab===tab);
+  });
+
+  // panels
+  document.getElementById("tab-pedido").classList.toggle("hidden", tab!=="pedido");
+  document.getElementById("tab-hoja").classList.toggle("hidden", tab!=="hoja");
+  document.getElementById("tab-factura").classList.toggle("hidden", tab!=="factura");
+
+  if(tab==="hoja") renderDocumento(false);
+  if(tab==="factura") renderDocumento(true);
+}
+
+function renderDocumento(esFactura){
+  const area = document.getElementById(esFactura ? "printFactura" : "printHoja");
+
+  if(!pedido.length){
+    area.innerHTML = `<div class="muted">No hay productos en el pedido.</div>`;
+    return;
+  }
+  if(!cliente){
+    guardarCliente();
+  }
+
+  const { aplica, totalQty, descuento } = descuentoHelados();
+  const totalNormal = pedido.reduce((s,l)=>s + l.precio*l.cantidad, 0);
+  const total = Math.max(0, totalNormal - descuento);
+
+  const base = total / (1 + IVA_PCT/100);
+  const iva = total - base;
+
+  let html = `
+    
+<div class="encabezado-datos">
+  
+  <!-- BOX CLIENTE -->
+  <div class="box">
+    <h3>Cliente</h3>
+    <div><strong>{{NOMBRE_CLIENTE}}</strong></div>
+    <div>{{DIRECCION_CLIENTE}}</div>
+    <div>{{CP_CLIENTE}}</div>
+    <div>Tel: {{TEL_CLIENTE}}</div>
+    <div>CIF/NIF: {{CIF_CLIENTE}}</div>
+  </div>
+
+  <!-- BOX EMPRESA -->
+  <div class="box">
+    <div class="empresa-con-logo">
+      <div>
+        <h3 style="margin-top:0">Empresa</h3>
+        <div><strong>Transpiking W.P. Global, S.L</strong></div>
+        <div>CL San Sebastian 62 ENT 1</div>
+        <div>08030 Barcelona</div>
+        <div>CIF: B22613558</div>
+      </div>
+    <img src="logo.png" class="logo-factura" alt="Logo empresa">
+    </div>
+  </div>
+
+</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Tipo</th>
+          <th class="right">Precio</th>
+          <th class="right">Cantidad</th>
+          <th class="right">Importe</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${pedido.map(l=>`
+          <tr>
+            <td>${esc(l.nombre)}</td>
+            <td>${esc(l.tipo)}</td>
+            <td class="right">${eur(l.precio)}</td>
+            <td class="right">${l.cantidad}</td>
+            <td class="right">${eur(l.precio*l.cantidad)}</td>
+          </tr>
+        `).join("")}
+
+        ${descuento>0 ? `
+          <tr>
+            <td>
+              <strong>Descuento promoción helados</strong>
+              <span class="pill">≥ ${HELADOS_UMBRAL} uds → ${HELADOS_PRECIO_PROMO.toFixed(2)} €/ud</span>
+              <div class="muted">Helados totales: ${totalQty}</div>
+            </td>
+            <td class="muted">Helados</td>
+            <td class="right">—</td>
+            <td class="right">—</td>
+            <td class="right"><strong>- ${eur(descuento)}</strong></td>
+          </tr>
+        ` : ""}
+      </tbody>
+    </table>
+  `;
+
+  if(esFactura){
+    html += `
+      <div class="box" style="max-width:420px;margin-left:auto">
+        <div style="display:flex;justify-content:space-between"><div>Base imponible</div><div><strong>${eur(base)}</strong></div></div>
+        <div style="display:flex;justify-content:space-between"><div>IVA (10%)</div><div><strong>${eur(iva)}</strong></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px"><div>Total (IVA incl.)</div><div><strong>${eur(total)}</strong></div></div>
+      </div>
+      <div class="muted">* IVA incluido en los precios.</div>
+    `;
+  } else {
+    html += `
+      <div class="box" style="max-width:420px;margin-left:auto">
+        <div style="display:flex;justify-content:space-between"><div><strong>Total</strong></div><div><strong>${eur(total)}</strong></div></div>
+      </div>
+    `;
+  }
+
+  area.innerHTML = html;
+}
+
+/* ========= NUEVO PEDIDO ========= */
+function nuevoPedido(){
+  pedido = [];
+  cliente = null;
+  document.getElementById("cliNombre").value = "";
+  document.getElementById("cliTel").value = "";
+  document.getElementById("cliDir").value = "";
+  document.getElementById("cliCP").value = "";
+  document.getElementById("cliCIF").value = "";
+  document.getElementById("cliObs").value = "";
+  document.getElementById("selCantidad").value = 1;
+  renderPedidoTabla();
+  cambiarTab("pedido");
+}
+</script>
+
+</body>
+</html>
