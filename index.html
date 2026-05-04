@@ -441,6 +441,7 @@ function generarHoja(){
 function generarFactura(){
   guardarCliente();
   cambiarTab("factura");
+ const numFactura = document.getElementById("facturaNum")?.value || "";
 }
 
 function cambiarTab(tab){
@@ -499,9 +500,17 @@ function renderDocumento(esFactura){
         <div>CL San Sebastian 62 ENT 1</div>
         <div>08030 Barcelona</div>
         <div>CIF: B22613558</div>
+        <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
+        <div><strong>Fecha:</strong> ${esc(cliente.fecha || hoyISO())}</div>
       </div>
     <img src="logo.png" class="logo-factura" alt="Logo empresa">
     </div>
+    
+<div class="box">
+  <label>Número de factura</label>
+  <input id="facturaNum" placeholder="Ej: 2024-001">
+</div>
+
   </div>
 
 </div>
