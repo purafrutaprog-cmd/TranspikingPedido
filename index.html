@@ -408,12 +408,12 @@ function renderPedidoTabla(){
 /* ========= CLIENTE ========= */
 function guardarCliente(){
   cliente = {
-    nombre: document.getElementById("cliNombre").value.trim(),
-    direccion: document.getElementById("cliDir").value.trim(),
-    cp: document.getElementById("cliCP").value.trim(),
-    tel: document.getElementById("cliTel").value.trim(),
-    cif: document.getElementById("cliCIF").value.trim(),
-    obs: document.getElementById("cliObs").value.trim(),
+    nombre: document.getElementById("cliNombre")?.value || "",
+    direccion: document.getElementById("cliDir")?.value || "",
+    cp: document.getElementById("cliCP")?.value || "",
+    tel: document.getElementById("cliTel")?.value || "",
+    cif: document.getElementById("cliCIF")?.value || "",
+    obs: document.getElementById("cliObs")?.value || "",
     fecha: hoyISO()
   };
 }
@@ -461,7 +461,7 @@ function cambiarTab(tab){
 
 function renderDocumento(esFactura){
   const area = document.getElementById(esFactura ? "printFactura" : "printHoja");
-
+  const numFactura = document.getElementById("facturaNum")?.value || "";
   if(!pedido.length){
     area.innerHTML = `<div class="muted">No hay productos en el pedido.</div>`;
     return;
@@ -476,10 +476,6 @@ function renderDocumento(esFactura){
 
   const base = total / (1 + IVA_PCT/100);
   const iva = total - base;
-
- const numFactura = document.getElementById("facturaNum")?.value || "";
-const fechaFactura = document.getElementById("facturaFecha")?.value || hoyISO();
-
   let html = `
     
 <div class="encabezado-datos">
