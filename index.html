@@ -441,10 +441,12 @@ function descuentoHelados(){
 function generarHoja(){
   guardarCliente();
   cambiarTab("hoja");
+  renderDocumento(true);
 }
 function generarFactura(){
   guardarCliente();
   cambiarTab("factura");
+  renderDocumento(true);
   const numFactura = document.getElementById("facturaNum")?.value || "";//
 }
 
