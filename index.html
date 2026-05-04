@@ -441,7 +441,7 @@ function generarHoja(){
 function generarFactura(){
   guardarCliente();
   cambiarTab("factura");
- const numFactura = document.getElementById("facturaNum")?.value || "";
+// const numFactura = document.getElementById("facturaNum")?.value || "";//
 }
 
 function cambiarTab(tab){
@@ -477,6 +477,9 @@ function renderDocumento(esFactura){
   const base = total / (1 + IVA_PCT/100);
   const iva = total - base;
 
+ const numFactura = document.getElementById("facturaNum")?.value || "";
+const fechaFactura = document.getElementById("facturaFecha")?.value || hoyISO();
+
   let html = `
     
 <div class="encabezado-datos">
@@ -505,11 +508,16 @@ function renderDocumento(esFactura){
       </div>
     <img src="logo.png" class="logo-factura" alt="Logo empresa">
     </div>
-    
-<div class="box">
+<div class="box no-print">
   <label>Número de factura</label>
   <input id="facturaNum" placeholder="Ej: 2024-001">
+  <label>Fecha</label>
+  <input id="facturaFecha" type="date">
 </div>
+//<div class="box">
+  //<label>Número de factura</label>
+  //<input id="facturaNum" placeholder="Ej: 2024-001">
+//</div>
 
   </div>
 
