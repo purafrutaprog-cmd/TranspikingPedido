@@ -82,7 +82,7 @@ button.print{
 /* Contenedor de los dos boxes (cliente / empresa) */
 .encabezado-datos{
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 35% 65%;
   gap: 16px;
 }
 
@@ -94,7 +94,7 @@ button.print{
 }
 
 .logo-factura{
-  max-width: 190px;   /* más compacto */
+  max-width: 170px;   /* más compacto */
   width: 100%;
   height: auto;
   object-fit: contain;
@@ -442,12 +442,12 @@ function generarHoja(){
   guardarCliente();
   cambiarTab("hoja");
   renderDocumento(true);
+ const numFactura = document.getElementById("facturaNum")?.value || "";//
 }
 function generarFactura(){
   guardarCliente();
   cambiarTab("factura");
   renderDocumento(true);
-  const numFactura = document.getElementById("facturaNum")?.value || "";//
 }
 
 function cambiarTab(tab){
