@@ -483,6 +483,7 @@ function renderDocumento(esFactura){
 
   const base = total;
   const iva = total*0.10;
+  const totalglob= base + iva;
   let html = `
     
 <div class="encabezado-datos">
@@ -568,7 +569,7 @@ function renderDocumento(esFactura){
 
       <div style="display:flex;justify-content:space-between;margin-top:6px">
         <div>Total (IVA incl.)</div>
-        <div><strong>${eur(total)}</strong></div>
+        <div><strong>${eur(totalglob)}</strong></div>
       </div>
     </div>
     
