@@ -482,7 +482,7 @@ function renderDocumento(esFactura){
   const total = Math.max(0, totalNormal - descuento);
 
   const iva = total*0.10;
-  const base= base + iva;
+  const base = total + iva;
   let html = `
     
 <div class="encabezado-datos">
