@@ -554,12 +554,30 @@ function renderDocumento(esFactura){
 
   if(esFactura){
     html += `
-      <div class="box" style="max-width:420px;margin-left:auto">
-        <div style="display:flex;justify-content:space-between"><div>Base imponible</div><div><strong>${eur(base)}</strong></div></div>
-        <div style="display:flex;justify-content:space-between"><div>IVA (10%)</div><div><strong>${eur(iva)}</strong></div></div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px"><div>Total (IVA incl.)</div><div><strong>${eur(total)}</strong></div></div>
+
+<div class="box" style="max-width:420px;margin-left:auto">
+      <div style="display:flex;justify-content:space-between">
+        <div>Base imponible</div>
+        <div><strong>${eur(base)}</strong></div>
       </div>
-      <div class="muted">* IVA incluido en los precios.</div>
+
+      <div style="display:flex;justify-content:space-between">
+        <div>IVA (10%)</div>
+        <div><strong>${eur(iva)}</strong></div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;margin-top:6px">
+        <div>Total (IVA incl.)</div>
+        <div><strong>${eur(total)}</strong></div>
+      </div>
+    </div>
+    
+    <!--  <div class="box" style="max-width:420px;margin-left:auto">-->
+     <!--   <div style="display:flex;justify-content:space-between"><div>Base imponible</div><div><strong>${eur(base)}</strong></div></div>-->
+      <!--  <div style="display:flex;justify-content:space-between"><div>IVA (10%)</div><div><strong>${eur(iva)}</strong></div></div>-->
+     <!--   <div style="display:flex;justify-content:space-between;margin-top:6px"><div>Total (IVA incl.)</div><div><strong>${eur(total)}</strong></div></div>-->
+     <!-- </div>
+      <div class="muted">* IVA no incluido en los precios.</div>
     `;
   } else {
     html += `
