@@ -481,7 +481,7 @@ function renderDocumento(esFactura){
   const totalNormal = pedido.reduce((s,l)=>s + l.precio*l.cantidad, 0);
   const total = Math.max(0, totalNormal - descuento);
 
-  const iva = total*0.10;
+  const iva = total * (1/IVA_PCT);
   const base = total + iva;
   let html = `
     
