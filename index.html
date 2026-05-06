@@ -486,16 +486,6 @@ function renderDocumento(esFactura){
     
 <div class="encabezado-datos">
   
-  <!-- BOX CLIENTE -->
-<div class="box">
-  <h3>Cliente</h3>
-  <div><strong>${esc(cliente.nombre)}</strong></div>
-  <div>${esc(cliente.direccion)}</div>
-  <div>${esc(cliente.cp)}</div>
-  <div>Tel: ${esc(cliente.tel)}</div>
-  <div>CIF/NIF: ${esc(cliente.cif)}</div>
-</div>
-
   <!-- BOX EMPRESA -->
   <div class="box">
     <div class="empresa-con-logo">
@@ -511,6 +501,16 @@ function renderDocumento(esFactura){
     <img src="logo.png" class="logo-factura" alt="Logo empresa">
     </div>
   </div>
+  <!-- BOX CLIENTE -->
+<div class="box">
+  <h3>Cliente</h3>
+  <div><strong>${esc(cliente.nombre)}</strong></div>
+  <div>${esc(cliente.direccion)}</div>
+  <div>${esc(cliente.cp)}</div>
+  <div>Tel: ${esc(cliente.tel)}</div>
+  <div>CIF/NIF: ${esc(cliente.cif)}</div>
+</div>
+
 
 </div>
     <table>
