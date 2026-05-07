@@ -485,6 +485,12 @@ const CATALOGO = [
 	stock: 100 
   },
 ];
+	/* ========= CARGAR STOCK GUARDADO ========= */
+const guardado = localStorage.getItem("catalogo");
+
+if(guardado){
+  CATALOGO.splice(0, CATALOGO.length, ...JSON.parse(guardado));
+}
 
 /* ========= ESTADO ========= */
 let pedido = []; // líneas: {id,tipo,nombre,precio,cantidad}
@@ -537,12 +543,23 @@ function addProducto(){
   const prod = CATALOGO.find(p=>p.id===id);
   if(!prod) return;
 
+// ✅ CONTROL DE STOCK
+  if(prod.stock < cant){
+    alert("No hay suficiente stock");
+    return;
+  }
+	
   const existente = pedido.find(l=>l.id===id);
   if(existente){
     existente.cantidad += cant;
   } else {
     pedido.push({...prod, cantidad:cant});
   }
+// ✅ RESTAR STOCK
+  prod.stock -= cant;
+
+localStorage.setItem("catalogo", JSON.stringify(CATALOGO));	
+	
   renderPedidoTabla();
 }
 
