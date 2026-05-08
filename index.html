@@ -183,6 +183,12 @@ button.print{
   <label>Observaciones</label>
   <textarea id="cliObs" placeholder="Notas del pedido (opcional)"></textarea>
 
+<div class="btns">
+  <button type="button" onclick="addCliente()" class="primary">
+    Guardar cliente
+  </button>
+</div>
+	
   <h3 style="margin-top:14px">Añadir producto</h3>
 
   <div class="linea-add">
@@ -813,13 +819,11 @@ function renderClientes(){
 });
 /* ========= DOCUMENTOS ========= */
 function generarHoja(){
-  addCliente();
   cambiarTab("hoja");
   renderDocumento(true);
  const numFactura = document.getElementById("facturaNum")?.value || "";//
 }
 function generarFactura(){
-  addCliente();
   cambiarTab("factura");
   renderDocumento(true);
 }
