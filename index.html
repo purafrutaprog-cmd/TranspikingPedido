@@ -105,6 +105,32 @@ button.print{
   .encabezado-datos{
     grid-template-columns: 1fr;
   }
+	.titulo-factura{
+  background: linear-gradient(135deg,#111,#333);
+  color:white;
+  text-align:center;
+  padding:18px;
+  border-radius:12px;
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:5px;
+  margin-bottom:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+  border:3px solid #2563eb;
+}
+	.factura-header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  margin-bottom:20px;
+}
+
+.logo-titulo{
+  width:90px;
+  height:auto;
+}
+	
 }
 
 </style>
@@ -195,7 +221,10 @@ button.print{
 
 <!-- FACTURA -->
   <section id="tab-factura" class="hidden box">
-  <h1>Factura</h1>
+  <div class="factura-header">
+  <img src="logo.png" class="logo-titulo">
+  <h1 class="titulo-factura">FACTURA</h1>
+</div>
   <div id="printFactura"></div>
 
   <div class="btns no-print">
@@ -208,8 +237,8 @@ button.print{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 	
 <script>
-const SUPABASE_URL = https://usvkjpugaccroerbnqva.supabase.co/Clientes;
-const SUPABASE_KEY = https://usvkjpugaccroerbnqva.supabase.co/rest/v1/;
+const SUPABASE_URL = "https://usvkjpugaccroerbnqva.supabase.co/Clientes";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzdmtqcHVnYWNjcm9lcmJucXZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTU3MjksImV4cCI6MjA5MzgzMTcyOX0.O8hIxkd62Aw9JaHpRFrbqL0TdM1MjdNxM1D3MsbQucE";
 
 const supabase = window.supabase.createClient(
   SUPABASE_URL,
