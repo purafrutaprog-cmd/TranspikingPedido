@@ -716,6 +716,23 @@ function renderClientes(){
     `;
   });
 }
+	document.addEventListener("change", function(e){
+
+  if(e.target.id === "selCliente"){
+
+    const clienteId = e.target.value;
+
+    const cli = CLIENTES.find(c => c.id == clienteId);
+
+    if(!cli) return;
+
+    document.getElementById("cliNombre").value = cli.nombre || "";
+    document.getElementById("cliTelefono").value = cli.telefono || "";
+    document.getElementById("cliNif").value = cli.nif || "";
+
+  }
+
+});
 /* ========= DOCUMENTOS ========= */
 function generarHoja(){
   addCliente();
