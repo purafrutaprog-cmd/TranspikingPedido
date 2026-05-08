@@ -730,9 +730,13 @@ async function addCliente(){
   await cargarClientes();
 
   alert("Cliente guardado");
-}
- 
 
+  document.getElementById("cliNombre").value = "";
+  document.getElementById("cliDireccion").value = "";
+  document.getElementById("cliCP").value = "";
+  document.getElementById("cliTelefono").value = "";
+  document.getElementById("cliCIF").value = "";
+}
 async function subirCatalogo(){
 
   const { data, error } = await supabase
