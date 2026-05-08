@@ -151,6 +151,10 @@ button.print{
   <div class="muted">Rellena cliente, añade productos y luego genera hoja de pedido.</div>
 
   <h3 style="margin-top:14px">Cliente</h3>
+	<label>Clientes guardados</label>
+<select id="selCliente">
+  <option value="">Seleccionar cliente</option>
+</select>
   <div class="row">
     <div>
       <label>Nombre</label>
@@ -238,7 +242,7 @@ button.print{
 	
 <script>
 	
-const SUPABASE_URL = "https://usvkjpugaccroerbnqva.supabase.co/Clientes";
+const SUPABASE_URL = "https://usvkjpugaccroerbnqva.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzdmtqcHVnYWNjcm9lcmJucXZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTU3MjksImV4cCI6MjA5MzgzMTcyOX0.O8hIxkd62Aw9JaHpRFrbqL0TdM1MjdNxM1D3MsbQucE";
 
 const supabase = window.supabase.createClient(	
@@ -601,6 +605,10 @@ function addProducto(){
   }
 // ✅ RESTAR STOCK
   prod.stock -= cant;
+	supabase
+  .from("productos")
+  .update({ stock: prod.stock })
+  .eq("id", prod.id);
 
 localStorage.setItem("catalogo", JSON.stringify(CATALOGO));	
 	
@@ -723,18 +731,7 @@ async function addCliente(){
 
   alert("Cliente guardado");
 }
-  cargarClientes();
-
-  renderClientes();
-
-  document.getElementById("cliNombre").value = "";
-  document.getElementById("cliDireccion").value = "";
-  document.getElementById("cliCP").value = "";
-  document.getElementById("cliTelefono").value = "";
-  document.getElementById("cliCIF").value = "";
-
-  alert("Cliente guardado");
-
+ 
 
 async function subirCatalogo(){
 
@@ -802,8 +799,8 @@ function renderClientes(){
     if(!cli) return;
 
     document.getElementById("cliNombre").value = cli.nombre || "";
-	document.getElementById("cliDireccion").value = cli.Dir || "";
-    document.getElementById("cliCP").value = cli.CP || "";
+    document.getElementById("cliDireccion").value = cli.direccion || "";
+    document.getElementById("cliCP").value = cli.codigoP || "";
     document.getElementById("cliTelefono").value = cli.telefono || "";
     document.getElementById("cliCIF").value = cli.nif || "";
 
@@ -845,8 +842,16 @@ function renderDocumento(esFactura){
     area.innerHTML = `<div class="muted">No hay productos en el pedido.</div>`;
     return;
   }
-  if(!cliente){
-    guardarCliente();
+if(!cliente){
+  cliente = {
+    nombre: document.getElementById("cliNombre").value,
+    telefono: document.getElementById("cliTelefono").value,
+    direccion: document.getElementById("cliDireccion").value,
+    cp: document.getElementById("cliCP").value,
+    cif: document.getElementById("cliCIF").value,
+    fecha: hoyISO()
+  };
+}
   }
 
   const { aplica, totalQty, descuento } = descuentoHelados();
@@ -876,6 +881,19 @@ const totalFinal = base + iva;
     </div>
   </div>
   <!-- BOX CLIENTE -->
+  <div class="box">
+  <h3 style="margin-top:0">Cliente</h3>
+
+  <div><strong>${esc(cliente.nombre || "")}</strong></div>
+
+  <div>${esc(cliente.direccion || "")}</div>
+
+  <div>${esc(cliente.cp || "")}</div>
+
+  <div>CIF/NIF: ${esc(cliente.cif || "")}</div>
+
+  <div>Tel: ${esc(cliente.telefono || "")}</div>
+</div>
 
 </div>
     <table>
