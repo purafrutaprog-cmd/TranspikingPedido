@@ -132,12 +132,12 @@ button.print{
     </div>
     <div>
       <label>Teléfono</label>
-      <input id="cliTel" placeholder="Teléfono">
+      <input id="cliTelefono" placeholder="Teléfono">
     </div>
   </div>
 
   <label>Dirección</label>
-  <input id="cliDir" placeholder="Dirección cliente">
+  <input id="cliDireccion" placeholder="Dirección cliente">
 
   <div class="row">
     <div>
@@ -702,17 +702,11 @@ function descuentoHelados(){
 }
 /* ========= RENDER CLIENTES ========= */
 function renderClientes(){
-
-  /* ========= const sel = document.getElementById("selCliente");========= */
- const clienteId = document.getElementById("selCliente").value;
- const cliente = CLIENTES.find(c => c.id == clienteId);
-
-  console.log(cliente);
-
+ const sel = document.getElementById("selCliente");
+  if(!sel) return;
   sel.innerHTML = `
     <option value="">Seleccionar cliente</option>
   `;
-
   CLIENTES.forEach(cli => {
 
     sel.innerHTML += `
@@ -720,7 +714,6 @@ function renderClientes(){
         ${cli.nombre} - ${cli.telefono}
       </option>
     `;
-
   });
 }
 /* ========= DOCUMENTOS ========= */
@@ -731,7 +724,7 @@ function generarHoja(){
  const numFactura = document.getElementById("facturaNum")?.value || "";//
 }
 function generarFactura(){
-  addClientes();
+  addCliente();
   cambiarTab("factura");
   renderDocumento(true);
 }
@@ -766,8 +759,9 @@ function renderDocumento(esFactura){
   const totalNormal = pedido.reduce((s,l)=>s + l.precio*l.cantidad, 0);
   const total = Math.max(0, totalNormal - descuento);
 
-  const iva = total * (1/IVA_PCT);
-  const base = total + iva;
+const base = total;
+const iva = total * (IVA_PCT / 100);
+const totalFinal = base + iva;
   let html = `
     
 <div class="encabezado-datos">
@@ -788,24 +782,6 @@ function renderDocumento(esFactura){
     </div>
   </div>
   <!-- BOX CLIENTE -->
-<div class="box">
-  <h3>Clientes</h3>
-
-  <input type="text" id="cliNombre" placeholder="Nombre">
-  <input type="text" id="cliDireccion" placeholder="Direccion">
-  <input type="text" id="cliCP" placeholder="Codigo Postal">
-  <input type="text" id="cliTelefono" placeholder="Teléfono">
-  <input type="text" id="cliNif" placeholder="NIF">
-  
-
-  <button onclick="addCliente()">Guardar Cliente</button>
-</div>
-
-<br>
-
-<select id="selCliente">
-  <option value="">Seleccionar cliente</option>
-</select>
 
 </div>
     <table>
@@ -862,7 +838,7 @@ function renderDocumento(esFactura){
 
       <div style="display:flex;justify-content:space-between;margin-top:6px">
         <div>Total (IVA incl.)</div>
-        <div><strong>${eur(base)}</strong></div>
+        <div><strong>${eur(totalFinal)}</strong></div>
       </div>
     </div>
     
