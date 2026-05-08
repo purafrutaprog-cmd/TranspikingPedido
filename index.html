@@ -693,19 +693,20 @@ async function addCliente(){
   const direccion = document.getElementById("cliDireccion").value.trim();
   const codigoP = document.getElementById("cliCP").value.trim();
   const telefono = document.getElementById("cliTelefono").value.trim();
-  const nif = document.getElementById("cliNif").value.trim();
+  const nif = document.getElementById("cliCIF").value.trim();
 
-  if(!nombre) {
+  if(!nombre){
     alert("Escribe un nombre");
     return;
   }
+
   const { data, error } = await supabase
     .from("clientes")
     .insert([
       {
         nombre,
-		direccion,
-		codigoP,
+        direccion,
+        codigoP,
         telefono,
         nif
       }
@@ -717,8 +718,10 @@ async function addCliente(){
     return;
   }
 
-  alert("Cliente guardado");
+  await cargarClientes();
 
+  alert("Cliente guardado");
+}
   cargarClientes();
 }
 
@@ -728,7 +731,7 @@ async function addCliente(){
   document.getElementById("cliDireccion").value = "";
   document.getElementById("cliCP").value = "";
   document.getElementById("cliTelefono").value = "";
-  document.getElementById("cliNif").value = "";
+  document.getElementById("cliCIF").value = "";
 
   alert("Cliente guardado");
 
@@ -799,8 +802,10 @@ function renderClientes(){
     if(!cli) return;
 
     document.getElementById("cliNombre").value = cli.nombre || "";
+	document.getElementById("cliDireccion").value = cli.Dir || "";
+    document.getElementById("cliCP").value = cli.CP || "";
     document.getElementById("cliTelefono").value = cli.telefono || "";
-    document.getElementById("cliNif").value = cli.nif || "";
+    document.getElementById("cliCIF").value = cli.nif || "";
 
   }
 
@@ -954,8 +959,8 @@ function nuevoPedido(){
   pedido = [];
   cliente = null;
   document.getElementById("cliNombre").value = "";
-  document.getElementById("cliTel").value = "";
-  document.getElementById("cliDir").value = "";
+  document.getElementById("cliTelefono").value = "";
+  document.getElementById("cliDireccion").value = "";
   document.getElementById("cliCP").value = "";
   document.getElementById("cliCIF").value = "";
   document.getElementById("cliObs").value = "";
