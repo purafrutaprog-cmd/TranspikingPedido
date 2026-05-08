@@ -205,7 +205,16 @@ button.print{
   </div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+	
 <script>
+const SUPABASE_URL = https://usvkjpugaccroerbnqva.supabase.co/Clientes;
+const SUPABASE_KEY = https://usvkjpugaccroerbnqva.supabase.co/rest/v1/;
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 /* ========= EMPRESA (FIJA) ========= */
 const EMPRESA = {
   nombre: "Transpiking W.P. Global, S.L",
@@ -517,6 +526,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   cargarCatalogoSelect();
   renderPedidoTabla();
 	renderClientes();
+	cargarClientes();
 });
 
 /* ========= CARGAR SELECT ========= */
@@ -648,7 +658,7 @@ function renderPedidoTabla(){
 
 /* ========= CLIENTE ========= */
 
-	function addCliente(){
+async function addCliente(){
 
   const nombre = document.getElementById("cliNombre").value.trim();
   const direccion = document.getElementById("cliDireccion").value.trim();
@@ -660,20 +670,28 @@ function renderPedidoTabla(){
     alert("Escribe un nombre");
     return;
   }
+  const { data, error } = await supabase
+    .from("clientes")
+    .insert([
+      {
+        nombre,
+		direccion,
+		codigoP,
+        telefono,
+        nif
+      }
+    ]);
 
-  const cliente = {
-    id: Date.now(),
-    nombre,
-    telefono,
-    nif
-  };
+  if(error){
+    console.log(error);
+    alert("Error guardando cliente");
+    return;
+  }
 
-  CLIENTES.push(cliente);
+  alert("Cliente guardado");
 
-  localStorage.setItem(
-    "clientes",
-    JSON.stringify(CLIENTES)
-  );
+  cargarClientes();
+}
 
   renderClientes();
 
@@ -685,7 +703,21 @@ function renderPedidoTabla(){
 
   alert("Cliente guardado");
 }
+async function cargarClientes(){
 
+  const { data, error } = await supabase
+    .from("clientes")
+    .select("*");
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  CLIENTES = data;
+
+  renderClientes();
+}
 /* ========= PROMO HELADOS (>=100 => 0,95€/ud) ========= */
 function descuentoHelados(){
   const helados = pedido.filter(l=>String(l.tipo||"").toLowerCase()==="helados");
