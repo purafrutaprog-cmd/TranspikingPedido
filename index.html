@@ -732,6 +732,17 @@ async function addCliente(){
 
   alert("Cliente guardado");
 }
+
+async function subirCatalogo(){
+
+  const { data, error } = await supabase
+    .from("productos")
+    .insert(CATALOGO);
+
+  console.log(data, error);
+
+}
+	
 async function cargarClientes(){
 
   const { data, error } = await supabase
