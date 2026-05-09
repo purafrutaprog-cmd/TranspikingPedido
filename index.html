@@ -710,39 +710,58 @@ async function addCliente(){
   const telefono = document.getElementById("cliTelefono").value.trim();
   const nif = document.getElementById("cliCIF").value.trim();
 
-  if(!nombre){
-    alert("Escribe un nombre");
+  if(!direccion){
+    alert("Escribe una direccion");
     return;
   }
 
-  const { data, error } = await supabase
-    .from("clientes")
-    .insert([
-      {
+  let error;
+
+  // EDITAR
+  if(clienteEditando){
+
+    const res = await supabase
+      .from("clientes")
+      .update({
         nombre,
         direccion,
         codigoP,
         telefono,
         nif
-      }
-    ]);
+      })
+      .eq("id", clienteEditando);
 
-if(error){
-  console.log(error);
-  alert(error.message);
-  return;
-}
+    error = res.error;
+
+  } else {
+
+    // NUEVO
+    const res = await supabase
+      .from("clientes")
+      .insert([
+        {
+          nombre,
+          direccion,
+          codigoP,
+          telefono,
+          nif
+        }
+      ]);
+
+    error = res.error;
+  }
+
+  if(error){
+    console.log(error);
+    alert(error.message);
+    return;
+  }
 
   await cargarClientes();
 
   alert("Cliente guardado");
-
-  document.getElementById("cliNombre").value = "";
-  document.getElementById("cliDireccion").value = "";
-  document.getElementById("cliCP").value = "";
-  document.getElementById("cliTelefono").value = "";
-  document.getElementById("cliCIF").value = "";
 }
+	
 async function subirCatalogo(){
 
   const { data, error } = await supabase
@@ -805,6 +824,7 @@ function renderClientes(){
     const clienteId = e.target.value;
 
     const cli = CLIENTES.find(c => c.id == clienteId);
+	  clienteEditando = cli.id;
 
     if(!cli) return;
 
@@ -984,6 +1004,7 @@ const totalFinal = base + iva;
 function nuevoPedido(){
   pedido = [];
   cliente = null;
+  clienteEditando = null;
   document.getElementById("cliNombre").value = "";
   document.getElementById("cliTelefono").value = "";
   document.getElementById("cliDireccion").value = "";
