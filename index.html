@@ -611,7 +611,7 @@ function addProducto(){
   }
 // ✅ RESTAR STOCK
   prod.stock -= cant;
-
+supabase
   .from("productos")
   .update({ stock: prod.stock })
   .eq("id", prod.id);
