@@ -727,11 +727,11 @@ async function addCliente(){
       }
     ]);
 
-  if(error){
-    console.log(error);
-    alert("Error guardando cliente");
-    return;
-  }
+if(error){
+  console.log(error);
+  alert(error.message);
+  return;
+}
 
   await cargarClientes();
 
