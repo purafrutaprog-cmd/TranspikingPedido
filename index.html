@@ -151,10 +151,15 @@ button.print{
   <div class="muted">Rellena cliente, añade productos y luego genera hoja de pedido.</div>
 
   <h3 style="margin-top:14px">Cliente</h3>
-	<label>Clientes guardados</label>
-<select id="selCliente">
-  <option value="">Seleccionar cliente</option>
-</select>
+<label>Buscar cliente</label>
+
+<input
+  type="text"
+  id="buscarCliente"
+  placeholder="Escribe dirección..."
+>
+
+<select id="selCliente" size="6"></select>
   <div class="row">
     <div>
       <label>Nombre</label>
@@ -803,20 +808,24 @@ function descuentoHelados(){
 }
 /* ========= RENDER CLIENTES ========= */
 function renderClientes(){
- const sel = document.getElementById("selCliente");
-  if(!sel) return;
-  sel.innerHTML = `
-    <option value="">Seleccionar cliente</option>
-  `;
-  CLIENTES.forEach(cli => {
 
-    sel.innerHTML += `
-      <option value="${cli.id}">
-         ${cli.direccion}
-      </option>
-    `;
-  });
+  renderClientesFiltrados(CLIENTES);
+
 }
+	document
+  .getElementById("buscarCliente")
+  .addEventListener("input", function(){
+
+    const texto = this.value.toLowerCase();
+
+    const filtrados = CLIENTES.filter(cli =>
+      (cli.direccion || "")
+      .toLowerCase()
+      .includes(texto)
+    );
+
+    renderClientesFiltrados(filtrados);
+});
 	document.addEventListener("change", function(e){
 
   if(e.target.id === "selCliente"){
@@ -837,6 +846,23 @@ function renderClientes(){
   }
 
 });
+
+	function renderClientesFiltrados(lista){
+
+  const sel = document.getElementById("selCliente");
+
+  sel.innerHTML = "";
+
+  lista.forEach(cli => {
+
+    sel.innerHTML += `
+      <option value="${cli.id}">
+        ${cli.direccion}
+      </option>
+    `;
+  });
+}
+	
 /* ========= DOCUMENTOS ========= */
 function generarHoja(){
   cambiarTab("hoja");
