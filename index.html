@@ -220,6 +220,8 @@ button.print{
 <!-- HOJA -->
 <section id="tab-hoja" class="hidden box">
   <div class="box no-print">
+  <label>Número de pedido</label>
+  <input id="pedidoNum" readonly>
   <label>Número de factura</label>
   <input id="facturaNum" placeholder="Ej: 2024-001">
   </div>
@@ -865,10 +867,53 @@ function renderClientes(){
 }
 	
 /* ========= DOCUMENTOS ========= */
-function generarHoja(){
+	async function generarNumeroPedido() {
+
+  const { data, error } = await supabase
+    .from("contador_pedidos")
+    .select("*")
+    .eq("id", 1)
+    .single();
+
+  if(error){
+    console.log(error);
+    alert("Error obteniendo número de pedido");
+    return null;
+  }
+
+  const siguiente = data.ultimo_numero + 1;
+
+  const { error: updateError } = await supabase
+    .from("contador_pedidos")
+    .update({ ultimo_numero: siguiente })
+    .eq("id", 1);
+
+  if(updateError){
+    console.log(updateError);
+    alert("Error actualizando contador");
+    return null;
+  }
+
+  const año = new Date().getFullYear();
+
+  const numeroPedido =
+    `P-${año}-${String(siguiente).padStart(4, "0")}`;
+
+  document.getElementById("pedidoNum").value =
+    numeroPedido;
+
+  return numeroPedido;
+}
+async function generarHoja(){
+
+  if(
+    !document.getElementById("pedidoNum").value
+  ){
+    await generarNumeroPedido();
+  }
+
   cambiarTab("hoja");
-  renderDocumento(true);
- const numFactura = document.getElementById("facturaNum")?.value || "";//
+  renderDocumento(false);
 }
 function generarFactura(){
   cambiarTab("factura");
@@ -929,6 +974,10 @@ const totalFinal = base + iva;
         <div>CL San Sebastian 62 ENT 1</div>
         <div>08030 Barcelona</div>
         <div>CIF: B22613558</div>
+		<div>
+      <strong>Nº Pedido:</strong>
+       ${esc(document.getElementById("pedidoNum").value)}
+       </div>
         <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
         <div><strong>Fecha:</strong> ${esc(cliente.fecha || hoyISO())}</div>
       </div>
