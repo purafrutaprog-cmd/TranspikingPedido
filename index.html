@@ -991,7 +991,12 @@ async function generarHoja(){
   ){
     await generarNumeroPedido();
   }
-await guardarPedido();
+if(!window.pedidoGuardado){
+
+  await guardarPedido();
+
+  window.pedidoGuardado = true;
+}
   cambiarTab("hoja");
   renderDocumento(false);
 }
@@ -1203,6 +1208,7 @@ const totalFinal = base + iva;
 
 /* ========= NUEVO PEDIDO ========= */
 function nuevoPedido(){
+  window.pedidoGuardado = false;
   pedido = [];
   cliente = null;
   clienteEditando = null;
