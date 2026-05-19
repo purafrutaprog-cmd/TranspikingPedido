@@ -143,6 +143,7 @@ button.print{
   <div class="tab active" data-tab="pedido" onclick="cambiarTab('pedido')">Pedido</div>
   <div class="tab" data-tab="hoja" onclick="cambiarTab('hoja')">Hoja de pedido</div>
   <div class="tab" data-tab="factura" onclick="cambiarTab('factura')">Factura</div>
+  <div class="tab" data-tab="historial" onclick="cambiarTab('historial')">Historial</div>
 </div>
 
 <!-- PEDIDO -->
@@ -224,6 +225,10 @@ button.print{
   <input id="pedidoNum" readonly>
   <label>Número de factura</label>
   <input id="facturaNum" placeholder="Ej: 2024-001">
+	  <label style="margin-top:10px;display:flex;gap:8px;align-items:center">
+  <input type="checkbox" id="requiereFactura">
+  Este pedido requiere factura
+</label>
   </div>
   <h2>Hoja de pedido</h2>
   <div id="printHoja"></div>
@@ -237,6 +242,15 @@ button.print{
 </section>
 
 <!-- FACTURA -->
+	<section id="tab-historial" class="hidden box">
+
+  <h2>Historial de pedidos</h2>
+
+  <div id="historialTabla">
+    Cargando...
+  </div>
+
+</section>
   <section id="tab-factura" class="hidden box">
   <div class="factura-header">
  <!-- <img src="logo.png" class="logo-titulo"> -->
@@ -927,8 +941,13 @@ async function guardarPedido(){
     numero_pedido:
       document.getElementById("pedidoNum").value,
 
-    numero_factura:
-      document.getElementById("facturaNum").value || "",
+requiere_factura:
+  document.getElementById("requiereFactura").checked,
+
+numero_factura:
+  document.getElementById("requiereFactura").checked
+    ? document.getElementById("facturaNum").value
+    : null,
 
     cliente_nombre:
       document.getElementById("cliNombre").value || "",
@@ -991,9 +1010,13 @@ function cambiarTab(tab){
   document.getElementById("tab-pedido").classList.toggle("hidden", tab!=="pedido");
   document.getElementById("tab-hoja").classList.toggle("hidden", tab!=="hoja");
   document.getElementById("tab-factura").classList.toggle("hidden", tab!=="factura");
+  document.getElementById("tab-historial").classList.toggle("hidden", tab!=="historial");
 
   if(tab==="hoja") renderDocumento(false);
   if(tab==="factura") renderDocumento(true);
+	if(tab==="historial"){
+  cargarHistorial();
+}
 }
 
 function renderDocumento(esFactura){
@@ -1128,6 +1151,54 @@ const totalFinal = base + iva;
   }
 
   area.innerHTML = html;
+}
+	async function cargarHistorial(){
+
+  const { data, error } = await supabase
+    .from("pedidos")
+    .select("*")
+    .order("id", { ascending:false });
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Pedido</th>
+          <th>Cliente</th>
+          <th>Fecha</th>
+          <th>Total</th>
+          <th>Factura</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  data.forEach(p => {
+
+    html += `
+      <tr>
+        <td>${p.numero_pedido || ""}</td>
+        <td>${p.cliente_nombre || ""}</td>
+        <td>${p.created_at || ""}</td>
+        <td>${eur(p.total || 0)}</td>
+        <td>
+          ${p.requiere_factura ? "SI" : "NO"}
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  document.getElementById("historialTabla").innerHTML = html;
 }
 
 /* ========= NUEVO PEDIDO ========= */
