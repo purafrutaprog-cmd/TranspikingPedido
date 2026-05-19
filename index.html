@@ -605,10 +605,10 @@ function addProducto(){
   if(!prod) return;
 
 // ✅ CONTROL DE STOCK
-  if(prod.stock < cant){
-    alert("No hay suficiente stock");
-    return;
-  }
+if(false){
+  alert("No hay suficiente stock");
+  return;
+}
 	
   const existente = pedido.find(l=>l.id===id);
   if(existente){
