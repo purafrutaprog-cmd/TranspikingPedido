@@ -915,7 +915,7 @@ function renderClientes(){
 
   return numeroPedido;
 }
-	async function guardarPedido(){
+async function guardarPedido(){
 
   const total = pedido.reduce(
     (s,l)=> s + (l.precio * l.cantidad),
@@ -923,36 +923,43 @@ function renderClientes(){
   );
 
   const pedidoData = {
+
     numero_pedido:
       document.getElementById("pedidoNum").value,
 
     numero_factura:
-      document.getElementById("facturaNum").value || null,
+      document.getElementById("facturaNum").value || "",
 
     cliente_nombre:
-      document.getElementById("cliNombre").value,
+      document.getElementById("cliNombre").value || "",
 
     cliente_direccion:
-      document.getElementById("cliDireccion").value,
+      document.getElementById("cliDireccion").value || "",
 
     cliente_telefono:
-      document.getElementById("cliTelefono").value,
+      document.getElementById("cliTelefono").value || "",
 
     cliente_cif:
-      document.getElementById("cliCIF").value,
+      document.getElementById("cliCIF").value || "",
 
-    total,
+    total: total,
 
     productos: pedido
+
   };
+
+  console.log(pedidoData);
 
   const { error } = await supabase
     .from("pedidos")
     .insert([pedidoData]);
 
   if(error){
+
     console.log(error);
-    alert("Error guardando pedido");
+
+    alert(error.message);
+
     return false;
   }
 
