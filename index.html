@@ -270,7 +270,7 @@ const EMPRESA = {
   cif: "B22613558"
 };
 
-/* ========= IVA (SIEMPRE INCLUIDO EN PRECIO) ========= */
+/* ========= IVA  ========= */
 const IVA_PCT = 10;
 
 /* ========= PROMO HELADOS =========
@@ -553,7 +553,6 @@ if(guardado){
 
 /* ========= ESTADO ========= */
 let pedido = []; // líneas: {id,tipo,nombre,precio,cantidad}
-let cliente = null;
 let clienteEditando = null;
 
 /* ========= HELPERS ========= */
@@ -672,6 +671,17 @@ function renderPedidoTabla(){
     inp.addEventListener("input", (e)=>{
       const i = parseInt(e.target.dataset.idx,10);
       const v = parseInt(e.target.value||"1",10);
+		const diferencia = v - pedido[i].cantidad;
+
+const prod = CATALOGO.find(p => p.id === pedido[i].id);
+
+if(prod.stock < diferencia){
+  alert("No hay suficiente stock");
+  e.target.value = pedido[i].cantidad;
+  return;
+}
+
+prod.stock -= diferencia;
       pedido[i].cantidad = Math.max(1, isNaN(v)?1:v);
       renderPedidoTabla();
     });
@@ -904,6 +914,49 @@ function renderClientes(){
 
   return numeroPedido;
 }
+	async function guardarPedido(){
+
+  const total = pedido.reduce(
+    (s,l)=> s + (l.precio * l.cantidad),
+    0
+  );
+
+  const pedidoData = {
+    numero_pedido:
+      document.getElementById("pedidoNum").value,
+
+    numero_factura:
+      document.getElementById("facturaNum").value || null,
+
+    cliente_nombre:
+      document.getElementById("cliNombre").value,
+
+    cliente_direccion:
+      document.getElementById("cliDireccion").value,
+
+    cliente_telefono:
+      document.getElementById("cliTelefono").value,
+
+    cliente_cif:
+      document.getElementById("cliCIF").value,
+
+    total,
+
+    productos: pedido
+  };
+
+  const { error } = await supabase
+    .from("pedidos")
+    .insert([pedidoData]);
+
+  if(error){
+    console.log(error);
+    alert("Error guardando pedido");
+    return false;
+  }
+
+  return true;
+}
 async function generarHoja(){
 
   if(
@@ -911,7 +964,7 @@ async function generarHoja(){
   ){
     await generarNumeroPedido();
   }
-
+await guardarPedido();
   cambiarTab("hoja");
   renderDocumento(false);
 }
@@ -943,14 +996,14 @@ function renderDocumento(esFactura){
     return;
   }
 if(!cliente){
-  cliente = {
-    nombre: document.getElementById("cliNombre").value,
-    telefono: document.getElementById("cliTelefono").value,
-    direccion: document.getElementById("cliDireccion").value,
-    cp: document.getElementById("cliCP").value,
-    cif: document.getElementById("cliCIF").value,
-    fecha: hoyISO()
-  };
+const cliente = {
+  nombre: document.getElementById("cliNombre").value,
+  telefono: document.getElementById("cliTelefono").value,
+  direccion: document.getElementById("cliDireccion").value,
+  cp: document.getElementById("cliCP").value,
+  cif: document.getElementById("cliCIF").value,
+  fecha: hoyISO()
+};
 }
   
 
