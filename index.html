@@ -878,7 +878,7 @@ function renderClientes(){
 }
 	
 /* ========= DOCUMENTOS ========= */
-	async function generarNumeroPedido() {
+async function generarNumeroPedido() {
 
   const { data, error } = await supabase
     .from("contador_pedidos")
@@ -1003,7 +1003,6 @@ function renderDocumento(esFactura){
     area.innerHTML = `<div class="muted">No hay productos en el pedido.</div>`;
     return;
   }
-if(!cliente){
 const cliente = {
   nombre: document.getElementById("cliNombre").value,
   telefono: document.getElementById("cliTelefono").value,
