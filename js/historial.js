@@ -30,7 +30,7 @@ async function cargarHistorial(){
       <tr>
         <td>${p.numero_pedido || ""}</td>
         <td>${p.cliente_direccion || ""}</td>
-        <td>${p.created_at || ""}</td>
+        <td>${p.fecha || ""}</td>
         <td>${eur(p.total || 0)}</td>
         <td>
           ${p.requiere_factura ? "SI" : "NO"}
