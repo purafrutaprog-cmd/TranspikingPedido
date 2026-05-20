@@ -289,6 +289,14 @@ document
       p.nombre.toLowerCase().includes(texto)
     );
 
+    const sel = document.getElementById("selProducto");
+
+    if(filtrados.length > 0){
+      sel.style.display = "block";
+    }else{
+      sel.style.display = "none";
+    }
+
     renderProductosFiltrados(filtrados);
 
 });
