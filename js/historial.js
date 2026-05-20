@@ -35,15 +35,52 @@ const totalHoy = pedidosHoy.reduce(
 );
 
 document.getElementById("resumenDia").innerHTML = `
+
   <h3>Resumen del día</h3>
 
-  <div><strong>Fecha:</strong> ${hoy}</div>
+  <div style="margin-bottom:10px">
+    <strong>Fecha:</strong> ${hoy}
+  </div>
 
-  <div><strong>Pedidos:</strong> ${pedidosHoy.length}</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Pedido</th>
+        <th>Dirección</th>
+        <th>Total</th>
+      </tr>
+    </thead>
 
-  <div><strong>Total vendido:</strong> ${eur(totalHoy)}</div>
+    <tbody>
+
+      ${pedidosHoy.map(p => `
+
+        <tr>
+          <td>${p.numero_pedido || ""}</td>
+
+          <td>${p.cliente_direccion || ""}</td>
+
+          <td>${eur(p.total || 0)}</td>
+        </tr>
+
+      `).join("")}
+
+    </tbody>
+  </table>
+
+  <div
+    style="
+      margin-top:15px;
+      font-size:20px;
+      font-weight:bold;
+      text-align:right;
+    "
+  >
+    TOTAL DEL DÍA:
+    ${eur(totalHoy)}
+  </div>
+
 `;
-  
   data.forEach(p => {
 
     html += `
