@@ -45,10 +45,17 @@ async function generarNumeroPedido() {
 }
 async function guardarPedido(){
 
-  const total = pedido.reduce(
-    (s,l)=> s + (l.precio * l.cantidad),
-    0
-  );
+const { descuento } = descuentoHelados();
+
+const totalNormal = pedido.reduce(
+  (s,l)=> s + (l.precio * l.cantidad),
+  0
+);
+
+const total = Math.max(
+  0,
+  totalNormal - descuento
+);
 
   const pedidoData = {
 
