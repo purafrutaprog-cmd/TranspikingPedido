@@ -1,9 +1,3 @@
-/* ========= ESTADO ========= */
-let pedido = []; // líneas: {id,tipo,nombre,precio,cantidad}
-let cliente = null;
-let clienteEditando = null;
-
-
 /* ========= DOCUMENTOS ========= */
 async function generarNumeroPedido() {
 
