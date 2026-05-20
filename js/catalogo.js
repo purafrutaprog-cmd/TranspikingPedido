@@ -1,20 +1,3 @@
-/* ========= EMPRESA (FIJA) ========= */
-const EMPRESA = {
-  nombre: "Transpiking W.P. Global, S.L",
-  direccion: "CL san sebatian 62 ENT 1",
-  cp: "08030 Barcelona",
-  cif: "B22613558"
-};
-
-/* ========= IVA  ========= */
-const IVA_PCT = 10;
-
-/* ========= PROMO HELADOS =========
-   Si total helados (sumando todos los helados) >= 100:
-   cada helado se cobra a 0.95 €
-*/
-const HELADOS_UMBRAL = 100;
-const HELADOS_PRECIO_PROMO = 0.95;
 
 /* ========= CATÁLOGO FIJO (NO EDITABLE DESDE LA APP) ========= */
 const CATALOGO = [
