@@ -12,7 +12,32 @@ function descuentoHelados(){
   }
   return { aplica:true, totalQty, descuento };
 }
+async function generarHoja(){
 
+  if(
+    !document.getElementById("pedidoNum").value
+  ){
+    await generarNumeroPedido();
+  }
+if(!window.pedidoGuardado){
+
+  await guardarPedido();
+
+  window.pedidoGuardado = true;
+}
+  cambiarTab("hoja");
+  renderDocumento(false);
+}
+function generarFactura(){
+  cambiarTab("factura");
+  renderDocumento(true);
+}
+
+
+  function generarFactura(){
+  cambiarTab("factura");
+  renderDocumento(true);
+}
 
 function renderDocumento(esFactura){
   const area = document.getElementById(esFactura ? "printFactura" : "printHoja");
@@ -146,7 +171,3 @@ const totalFinal = base + iva;
   area.innerHTML = html;
 }
 
-  function generarFactura(){
-  cambiarTab("factura");
-  renderDocumento(true);
-}
