@@ -24,6 +24,25 @@ async function cargarHistorial(){
       <tbody>
   `;
 
+const hoy = hoyISO();
+
+const pedidosHoy = data.filter(p => p.fecha === hoy);
+
+const totalHoy = pedidosHoy.reduce(
+  (s,p) => s + Number(p.total || 0),
+  0
+);
+
+document.getElementById("resumenDia").innerHTML = `
+  <h3>Resumen del día</h3>
+
+  <div><strong>Fecha:</strong> ${hoy}</div>
+
+  <div><strong>Pedidos:</strong> ${pedidosHoy.length}</div>
+
+  <div><strong>Total vendido:</strong> ${eur(totalHoy)}</div>
+`;
+  
   data.forEach(p => {
 
     html += `
