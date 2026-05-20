@@ -102,19 +102,32 @@ numero_factura:
 
 /* ========= NUEVO PEDIDO ========= */
 function nuevoPedido(){
+  
   window.pedidoGuardado = false;
+  
   pedido = [];
+  
   cliente = null;
+  
   clienteEditando = null;
+  
   document.getElementById("cliNombre").value = "";
   document.getElementById("cliTelefono").value = "";
   document.getElementById("cliDireccion").value = "";
   document.getElementById("cliCP").value = "";
   document.getElementById("cliCIF").value = "";
   document.getElementById("cliObs").value = "";
+  
+  document.getElementById("pedidoNum").value = "";
+  document.getElementById("facturaNum").value = ""; 
+  
   document.getElementById("selCantidad").value = 1;
+  
   renderPedidoTabla();
-  cambiarTab("pedido");
+  
+  cambiarTab("pedido"); 
+  
+  generarNumeroPedido();
 }
 
 
