@@ -29,14 +29,6 @@ const cliente = {
   cif: document.getElementById("cliCIF").value,
   fecha: hoyISO()
 };
-  function generarFactura(){
-  cambiarTab("factura");
-  renderDocumento(true);
-}
-
-
-  
-
   const { aplica, totalQty, descuento } = descuentoHelados();
   const totalNormal = pedido.reduce((s,l)=>s + l.precio*l.cantidad, 0);
   const total = Math.max(0, totalNormal - descuento);
@@ -150,6 +142,11 @@ const totalFinal = base + iva;
     `;
   }
 
+
   area.innerHTML = html;
 }
 
+  function generarFactura(){
+  cambiarTab("factura");
+  renderDocumento(true);
+}
