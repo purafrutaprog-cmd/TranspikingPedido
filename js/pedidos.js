@@ -77,6 +77,8 @@ numero_factura:
 
     total: total,
 
+    fecha: hoyISO(),
+
     productos: pedido
 
   };
