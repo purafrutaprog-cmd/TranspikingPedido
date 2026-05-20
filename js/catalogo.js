@@ -279,6 +279,37 @@ function cargarCatalogoSelect(){
   });
 }
 
+document
+  .getElementById("buscarProducto")
+  .addEventListener("input", function(){
+
+    const texto = this.value.toLowerCase();
+
+    const filtrados = CATALOGO.filter(p =>
+      p.nombre.toLowerCase().includes(texto)
+    );
+
+    renderProductosFiltrados(filtrados);
+
+});
+
+function renderProductosFiltrados(lista){
+
+  const sel = document.getElementById("selProducto");
+
+  sel.innerHTML = "";
+
+  lista.forEach(p => {
+
+    sel.innerHTML += `
+      <option value="${p.id}">
+        ${p.nombre} — ${eur(p.precio)}
+      </option>
+    `;
+  });
+
+}
+
 /* ========= AÑADIR PRODUCTO (SUMA SI EXISTE) ========= */
 function addProducto(){
   const id = document.getElementById("selProducto").value;
