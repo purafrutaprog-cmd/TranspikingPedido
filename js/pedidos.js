@@ -235,10 +235,7 @@ if(!window.pedidoGuardado){
   cambiarTab("hoja");
   renderDocumento(false);
 }
-function generarFactura(){
-  cambiarTab("factura");
-  renderDocumento(true);
-}
+
 /* ========= NUEVO PEDIDO ========= */
 function nuevoPedido(){
   window.pedidoGuardado = false;
