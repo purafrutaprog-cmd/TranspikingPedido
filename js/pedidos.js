@@ -104,22 +104,7 @@ numero_factura:
 
   return true;
 }
-async function generarHoja(){
 
-  if(
-    !document.getElementById("pedidoNum").value
-  ){
-    await generarNumeroPedido();
-  }
-if(!window.pedidoGuardado){
-
-  await guardarPedido();
-
-  window.pedidoGuardado = true;
-}
-  cambiarTab("hoja");
-  renderDocumento(false);
-}
 
 /* ========= NUEVO PEDIDO ========= */
 function nuevoPedido(){
