@@ -19,6 +19,7 @@ async function cargarHistorial(){
           <th>Fecha</th>
           <th>Total</th>
           <th>Factura</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -54,6 +55,19 @@ document.getElementById("resumenDia").innerHTML = `
         <td>
           ${p.requiere_factura ? "SI" : "NO"}
         </td>
+
+        <td>
+
+         <button onclick="reimprimirPedido(${p.id})">
+          Ver
+         </button>
+
+          <button onclick="reimprimirPedido(${p.id}, true)">
+            Factura
+          </button>
+
+        </td>
+        
       </tr>
     `;
   });
@@ -64,4 +78,63 @@ document.getElementById("resumenDia").innerHTML = `
   `;
 
   document.getElementById("historialTabla").innerHTML = html;
+}
+async function reimprimirPedido(id, abrirFactura = false){
+
+  const { data, error } = await supabase
+    .from("pedidos")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if(error){
+    console.log(error);
+    alert("Error cargando pedido");
+    return;
+  }
+
+  // RECUPERAR PRODUCTOS
+  pedido = data.productos || [];
+
+  // RECUPERAR CLIENTE
+  document.getElementById("cliNombre").value =
+    data.cliente_nombre || "";
+
+  document.getElementById("cliDireccion").value =
+    data.cliente_direccion || "";
+
+  document.getElementById("cliTelefono").value =
+    data.cliente_telefono || "";
+
+  document.getElementById("cliCIF").value =
+    data.cliente_cif || "";
+
+  // PEDIDO
+  document.getElementById("pedidoNum").value =
+    data.numero_pedido || "";
+
+  // FACTURA
+  document.getElementById("facturaNum").value =
+    data.numero_factura || "";
+
+  // CHECK FACTURA
+  document.getElementById("requiereFactura").checked =
+    data.requiere_factura || false;
+
+  renderPedidoTabla();
+
+  if(abrirFactura){
+
+    cambiarTab("factura");
+
+    renderDocumento(true);
+
+  } else {
+
+    cambiarTab("hoja");
+
+    renderDocumento(false);
+
+  }
+
 }
