@@ -1,4 +1,40 @@
 // APP
+/* ========= EMPRESA ========= */
+const EMPRESA = {
+  nombre: "Transpiking W.P. Global, S.L",
+  direccion: "CL san sebatian 62 ENT 1",
+  cp: "08030 Barcelona",
+  cif: "B22613558"
+};
+
+const IVA_PCT = 10;
+
+const HELADOS_UMBRAL = 100;
+const HELADOS_PRECIO_PROMO = 0.95;
+
+/* ========= ESTADO ========= */
+let pedido = [];
+let cliente = null;
+let clienteEditando = null;
+
+/* ========= HELPERS ========= */
+const eur = (n)=> Number(n||0).toFixed(2)+" €";
+
+const esc = (s)=> String(s||"")
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
+
+function hoyISO(){
+  const d=new Date();
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  const dd=String(d.getDate()).padStart(2,"0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+/* ========= APP ========= */
 document.addEventListener("DOMContentLoaded", ()=>{
 
   cargarCatalogoSelect();
@@ -34,35 +70,3 @@ function cambiarTab(tab){
     cargarHistorial();
   }
 }
-
-function cargarCatalogoSelect(){
-  const sel = document.getElementById("selProducto");
-  sel.innerHTML = "";
-
-  const tipos = [...new Set(CATALOGO.map(p=>p.tipo))].sort((a,b)=>a.localeCompare(b));
-  tipos.forEach(tipo=>{
-    const og=document.createElement("optgroup");
-    og.label=tipo;
-    CATALOGO.filter(p=>p.tipo===tipo).sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(p=>{
-      const opt=document.createElement("option");
-      opt.value=p.id;
-      opt.textContent = `${p.nombre} — ${eur(p.precio)}`;
-      og.appendChild(opt);
-    });
-    sel.appendChild(og);
-  });
-}
-/* ========= HELPERS ========= */
-const eur = (n)=> Number(n||0).toFixed(2)+" €";
-const esc = (s)=> String(s||"")
-  .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-
-
-function hoyISO(){
-  const d=new Date();
-  const mm=String(d.getMonth()+1).padStart(2,"0");
-  const dd=String(d.getDate()).padStart(2,"0");
-  return `${d.getFullYear()}-${mm}-${dd}`;
-}
-
