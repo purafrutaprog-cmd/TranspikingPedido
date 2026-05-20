@@ -129,23 +129,28 @@ prod.stock -= diferencia;
 /* ========= DOCUMENTOS ========= */
 async function generarNumeroPedido() {
 
+  // Obtener contador actual
   const { data, error } = await supabase
     .from("contador_pedidos")
-    .select("*")
+    .select("ultimo_numero")
     .eq("id", 1)
     .single();
 
   if(error){
     console.log(error);
-    alert("Error obteniendo número de pedido");
+    alert("Error obteniendo contador");
     return null;
   }
 
-  const siguiente = data.ultimo_numero + 1;
+  // siguiente número
+  const siguiente = Number(data.ultimo_numero || 0) + 1;
 
-  const { error: updateError } = await supabase
+  // guardar inmediatamente
+  const { error:updateError } = await supabase
     .from("contador_pedidos")
-    .update({ ultimo_numero: siguiente })
+    .update({
+      ultimo_numero: siguiente
+    })
     .eq("id", 1);
 
   if(updateError){
@@ -154,11 +159,13 @@ async function generarNumeroPedido() {
     return null;
   }
 
+  // generar número visible
   const año = new Date().getFullYear();
 
   const numeroPedido =
-    `P-${año}-${String(siguiente).padStart(4, "0")}`;
+    `P-${año}-${String(siguiente).padStart(4,"0")}`;
 
+  // ponerlo en pantalla
   document.getElementById("pedidoNum").value =
     numeroPedido;
 
