@@ -29,7 +29,7 @@ async function cargarHistorial(){
     html += `
       <tr>
         <td>${p.numero_pedido || ""}</td>
-        <td>${p.cliente_nombre || ""}</td>
+        <td>${p.cliente_direccion || ""}</td>
         <td>${p.created_at || ""}</td>
         <td>${eur(p.total || 0)}</td>
         <td>
