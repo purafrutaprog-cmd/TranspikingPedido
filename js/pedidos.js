@@ -77,7 +77,9 @@ numero_factura:
 
     total: total,
 
-    fecha: hoyISO(),
+    fecha:
+  document.getElementById("fechaPedido").value
+  || hoyISO(),
 
     productos: pedido
 
