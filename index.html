@@ -80,11 +80,15 @@
   		type="text"
   		id="buscarProducto"
   		placeholder="Buscar producto...">
+		<input
+  		type="text"
+  		id="buscarProducto"
+  		placeholder="Escribe producto..."
+  		autocomplete="off"
+		>
 
-		<select id="selProducto" style="display:none">
-        </select>
-		
-    </div>
+   		<div id="listaProductos" class="lista-busqueda"></div>
+	</div>
     <div>
       <label>Cantidad</label>
       <input id="selCantidad" type="number" min="1" value="1">
