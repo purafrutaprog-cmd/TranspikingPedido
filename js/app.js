@@ -13,6 +13,7 @@ const HELADOS_UMBRAL = 100;
 const HELADOS_PRECIO_PROMO = 0.95;
 
 /* ========= ESTADO ========= */
+let CLIENTES = [];
 let pedido = [];
 let cliente = null;
 let clienteEditando = null;
