@@ -1,4 +1,5 @@
 /* ========= CLIENTES ========= */
+let CLIENTES = [];
 let CLIENTES = JSON.parse(localStorage.getItem("clientes")) || [];
 	
 	/* ========= CARGAR STOCK GUARDADO ========= */
