@@ -225,3 +225,67 @@ async function cambiarRuta(id, ruta){
 
 }
 
+async function descargarRuta(ruta){
+
+  const { data, error } = await supabase
+    .from("pedidos")
+    .select("*")
+    .eq("ruta", ruta)
+    .order("created_at", { ascending:true });
+
+  if(error){
+
+    console.log(error);
+
+    alert("Error cargando ruta");
+
+    return;
+  }
+
+  let texto = `
+${ruta}
+========================
+
+`;
+
+  data.forEach(p => {
+
+    texto += `
+Pedido: ${p.numero_pedido}
+
+Direccion:
+${p.cliente_direccion || ""}
+
+Telefono:
+${p.cliente_telefono || ""}
+
+Total:
+${Number(p.total || 0).toFixed(2)} €
+
+------------------------
+
+`;
+  });
+
+  const blob = new Blob(
+    [texto],
+    { type:"text/plain" }
+  );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement("a");
+
+  a.href = url;
+
+  a.download =
+    `${ruta}.txt`;
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+}
+
