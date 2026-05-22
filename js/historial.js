@@ -230,8 +230,7 @@ async function descargarRuta(ruta){
   const { data, error } = await supabase
     .from("pedidos")
     .select("*")
-    .eq("ruta", ruta)
-    .order("created_at", { ascending:true });
+    .eq("ruta", ruta);
 
   if(error){
 
@@ -242,50 +241,117 @@ async function descargarRuta(ruta){
     return;
   }
 
-  let texto = `
-${ruta}
-========================
+  let totalRuta = 0;
 
+  let html = `
+<html>
+<head>
+
+<title>${ruta}</title>
+
+<style>
+
+body{
+  font-family:Arial;
+  padding:20px;
+}
+
+h1{
+  margin-bottom:20px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td{
+  border:1px solid #ccc;
+  padding:10px;
+  text-align:left;
+}
+
+th{
+  background:#f3f3f3;
+}
+
+.total{
+  margin-top:20px;
+  font-size:22px;
+  font-weight:bold;
+  text-align:right;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>${ruta}</h1>
+
+<table>
+
+<thead>
+<tr>
+  <th>Pedido</th>
+  <th>Direccion</th>
+  <th>Telefono</th>
+  <th>Total</th>
+</tr>
+</thead>
+
+<tbody>
 `;
 
   data.forEach(p => {
 
-    texto += `
-Pedido: ${p.numero_pedido}
+    totalRuta += Number(p.total || 0);
 
-Direccion:
+    html += `
+<tr>
+
+<td>
+${p.numero_pedido || ""}
+</td>
+
+<td>
 ${p.cliente_direccion || ""}
+</td>
 
-Telefono:
+<td>
 ${p.cliente_telefono || ""}
+</td>
 
-Total:
+<td>
 ${Number(p.total || 0).toFixed(2)} €
+</td>
 
-------------------------
-
+</tr>
 `;
   });
 
-  const blob = new Blob(
-    [texto],
-    { type:"text/plain" }
-  );
+  html += `
+</tbody>
+</table>
 
-  const url =
-    URL.createObjectURL(blob);
+<div class="total">
 
-  const a =
-    document.createElement("a");
+TOTAL RUTA:
+${totalRuta.toFixed(2)} €
 
-  a.href = url;
+</div>
 
-  a.download =
-    `${ruta}.txt`;
+</body>
+</html>
+`;
 
-  a.click();
+  const ventana = window.open("", "_blank");
 
-  URL.revokeObjectURL(url);
+  ventana.document.write(html);
+
+  ventana.document.close();
+
+  ventana.print();
 
 }
-
