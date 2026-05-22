@@ -19,6 +19,7 @@ async function cargarHistorial(){
           <th>Fecha</th>
           <th>Total</th>
           <th>Factura</th>
+          <th>Ruta</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -92,6 +93,34 @@ document.getElementById("resumenDia").innerHTML = `
         <td>
           ${p.requiere_factura ? "SI" : "NO"}
         </td>
+
+<td>
+
+<select onchange="cambiarRuta(${p.id}, this.value)">
+
+  <option value="Pendiente"
+    ${p.ruta === "Pendiente" ? "selected" : ""}>
+    Pendiente
+  </option>
+
+  <option value="Ruta 1"
+    ${p.ruta === "Ruta 1" ? "selected" : ""}>
+    Ruta 1
+  </option>
+
+  <option value="Ruta 2"
+    ${p.ruta === "Ruta 2" ? "selected" : ""}>
+    Ruta 2
+  </option>
+
+  <option value="Entregado"
+    ${p.ruta === "Entregado" ? "selected" : ""}>
+    Entregado
+  </option>
+
+</select>
+
+</td>
 
         <td>
 
@@ -175,3 +204,24 @@ async function reimprimirPedido(id, abrirFactura = false){
   }
 
 }
+
+async function cambiarRuta(id, ruta){
+
+  const { error } = await supabase
+    .from("pedidos")
+    .update({ ruta })
+    .eq("id", id);
+
+  if(error){
+
+    console.log(error);
+
+    alert("Error actualizando ruta");
+
+    return;
+  }
+
+  console.log("Ruta actualizada");
+
+}
+
