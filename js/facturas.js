@@ -33,10 +33,30 @@ function generarFactura(){
   renderDocumento(true);
 }
 
+async function finalizarPedido(){
 
-  function generarFactura(){
-  cambiarTab("factura");
-  renderDocumento(true);
+  if(!document.getElementById("pedidoNum").value){
+    await generarNumeroPedido();
+  }
+
+  if(!window.pedidoGuardado){
+    await guardarPedido();
+    window.pedidoGuardado = true;
+  }
+
+  // SIEMPRE HOJA
+  cambiarTab("hoja");
+  renderDocumento(false);
+
+  // FACTURA OPCIONAL
+  const requiereFactura = document.getElementById("requiereFactura").checked;
+
+  if(requiereFactura){
+    setTimeout(() => {
+      cambiarTab("factura");
+      renderDocumento(true);
+    }, 300);
+  }
 }
 
 function renderDocumento(esFactura){
