@@ -24,12 +24,6 @@
   <div class="muted">Rellena cliente, añade productos y luego genera hoja de pedido.</div>
 
   <h3 style="margin-top:14px">Cliente</h3>
-
-	<!-- AQUÍ -->
-	<label style="display:flex;gap:8px;align-items:center;margin-top:10px">
- 	 <input type="checkbox" id="requiereFactura">
- 	 Este pedido requiere factura
-	</label>
 	
 <label>Buscar cliente</label>
 
@@ -74,6 +68,19 @@
   <button type="button" onclick="addCliente()" class="primary">
     Guardar cliente
   </button>
+</div>
+
+<div class="factura-opcion">
+  <label class="factura-box">
+    <input type="checkbox" id="requiereFactura">
+
+    <div class="factura-texto">
+      <strong>🧾 Este pedido requiere factura</strong>
+      <div class="muted">
+        Se generará automáticamente la factura junto a la hoja de pedido
+      </div>
+    </div>
+  </label>
 </div>
 	
   <h3 style="margin-top:14px">Añadir producto</h3>
