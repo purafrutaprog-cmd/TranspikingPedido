@@ -133,6 +133,8 @@ function nuevoPedido(){
   document.getElementById("facturaNum").value = ""; 
   
   document.getElementById("selCantidad").value = 1;
+
+  document.getElementById("requiereFactura").checked = false;
   
   renderPedidoTabla();
   
