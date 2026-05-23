@@ -45,6 +45,9 @@ async function generarNumeroPedido() {
 }
 async function guardarPedido(){
 
+  const pedidoId = window.pedidoId || crypto.randomUUID();
+window.pedidoId = pedidoId;
+
 const { descuento } = descuentoHelados();
 
 const totalNormal = pedido.reduce(
@@ -58,6 +61,7 @@ const total = Math.max(
 );
 
   const pedidoData = {
+    pedido_id: pedidoId,
 
     numero_pedido:
       document.getElementById("pedidoNum").value,
@@ -96,7 +100,9 @@ numero_factura:
 
   const { error } = await supabase
     .from("pedidos")
-    .insert([pedidoData]);
+    .upsert([pedidoData], {
+    onConflict: "pedido_id"
+    });
 
   if(error){
 
