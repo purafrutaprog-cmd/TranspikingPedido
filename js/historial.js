@@ -84,16 +84,17 @@ document.getElementById("resumenDia").innerHTML = `
 `;
   data.forEach(p => {
   html += `
-  <tr onclick="cargarPedido(${p.id})"
-      style="cursor:pointer">
+    <tr onclick="cargarPedido(${p.id})"
+        style="cursor:pointer">
 
-    <td>${p.numero_pedido || ""}</td>
-    <td>${p.cliente_direccion || ""}</td>
-    <td>${p.fecha || ""}</td>
-    <td>${eur(p.total || 0)}</td>
-    <td>
-      ${p.requiere_factura ? "SI" : "NO"}
-    </td>
+      <td>${p.numero_pedido || ""}</td>
+      <td>${p.cliente_direccion || ""}</td>
+      <td>${p.fecha || ""}</td>
+      <td>${eur(p.total || 0)}</td>
+      <td>
+         ${p.requiere_factura ? "SI" : "NO"}
+      </td>
+  </tr> 
 `;
 
 <td>
