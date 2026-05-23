@@ -24,17 +24,18 @@ async function finalizarPedido(){
     window.pedidoGuardado = true;
   }
 
+  const requiereFactura =
+    document.getElementById("requiereFactura")?.checked === true;
+
   // SIEMPRE HOJA
   cambiarTab("hoja");
   renderDocumento(false);
 
-  // FACTURA OPCIONAL
-  document.getElementById("facturaNum").disabled = !requiereFactura;
-
-if(requiereFactura){
-  cambiarTab("factura");
-  renderDocumento(true);
-	}
+  // FACTURA SOLO SI ESTÁ MARCADO
+  if(requiereFactura){
+    cambiarTab("factura");
+    renderDocumento(true);
+  }
 }
 
 
