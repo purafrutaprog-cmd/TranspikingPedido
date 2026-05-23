@@ -12,26 +12,6 @@ function descuentoHelados(){
   }
   return { aplica:true, totalQty, descuento };
 }
-async function generarHoja(){
-
-  if(
-    !document.getElementById("pedidoNum").value
-  ){
-    await generarNumeroPedido();
-  }
-if(!window.pedidoGuardado){
-
-  await guardarPedido();
-
-  window.pedidoGuardado = true;
-}
-  cambiarTab("hoja");
-  renderDocumento(false);
-}
-function generarFactura(){
-  cambiarTab("factura");
-  renderDocumento(true);
-}
 
 async function finalizarPedido(){
 
@@ -51,11 +31,10 @@ async function finalizarPedido(){
   // FACTURA OPCIONAL
   const requiereFactura = document.getElementById("requiereFactura").checked;
 
-  if(requiereFactura){
-    setTimeout(() => {
-      cambiarTab("factura");
-      renderDocumento(true);
-    }, 300);
+if(requiereFactura){
+  cambiarTab("factura");
+  renderDocumento(true);
+}
   }
 }
 
