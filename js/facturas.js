@@ -29,7 +29,7 @@ async function finalizarPedido(){
   renderDocumento(false);
 
   // FACTURA OPCIONAL
-  const requiereFactura = document.getElementById("requiereFactura").checked;
+  document.getElementById("facturaNum").disabled = !requiereFactura;
 
 if(requiereFactura){
   cambiarTab("factura");
