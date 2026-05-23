@@ -82,70 +82,72 @@ document.getElementById("resumenDia").innerHTML = `
   </div>
 
 `;
-  data.forEach(p => {
-html += `
-  <tr onclick="cargarPedido(${p.id})"
-      style="cursor:pointer">
 
-    <td>${p.numero_pedido || ""}</td>
+data.forEach(p => {
 
-    <td>${p.cliente_direccion || ""}</td>
+  html += `
 
-    <td>${p.fecha || ""}</td>
+    <tr onclick="cargarPedido(${p.id})"
+        style="cursor:pointer">
 
-    <td>${eur(p.total || 0)}</td>
+      <td>${p.numero_pedido || ""}</td>
 
-    <td>
-      ${p.requiere_factura ? "SI" : "NO"}
-    </td>
+      <td>${p.cliente_direccion || ""}</td>
 
-  </tr>
-`;
+      <td>${p.fecha || ""}</td>
 
-<td>
+      <td>${eur(p.total || 0)}</td>
 
-<select onchange="cambiarRuta(${p.id}, this.value)">
+      <td>
+        ${p.requiere_factura ? "SI" : "NO"}
+      </td>
 
-  <option value="Pendiente"
-    ${p.ruta === "Pendiente" ? "selected" : ""}>
-    Pendiente
-  </option>
+      <td>
 
-  <option value="Ruta 1"
-    ${p.ruta === "Ruta 1" ? "selected" : ""}>
-    Ruta 1
-  </option>
+        <select onclick="event.stopPropagation()"
+                onchange="cambiarRuta(${p.id}, this.value)">
 
-  <option value="Ruta 2"
-    ${p.ruta === "Ruta 2" ? "selected" : ""}>
-    Ruta 2
-  </option>
+          <option value="Pendiente"
+            ${p.ruta === "Pendiente" ? "selected" : ""}>
+            Pendiente
+          </option>
 
-  <option value="Entregado"
-    ${p.ruta === "Entregado" ? "selected" : ""}>
-    Entregado
-  </option>
+          <option value="Ruta 1"
+            ${p.ruta === "Ruta 1" ? "selected" : ""}>
+            Ruta 1
+          </option>
 
-</select>
+          <option value="Ruta 2"
+            ${p.ruta === "Ruta 2" ? "selected" : ""}>
+            Ruta 2
+          </option>
 
-</td>
+          <option value="Entregado"
+            ${p.ruta === "Entregado" ? "selected" : ""}>
+            Entregado
+          </option>
 
-        <td>
+        </select>
 
-         <button onclick="reimprimirPedido(${p.id})">
+      </td>
+
+      <td>
+
+        <button onclick="event.stopPropagation(); reimprimirPedido(${p.id})">
           Ver
-         </button>
+        </button>
 
-          <button onclick="reimprimirPedido(${p.id}, true)">
-            Factura
-          </button>
+        <button onclick="event.stopPropagation(); reimprimirPedido(${p.id}, true)">
+          Factura
+        </button>
 
-        </td>
-        
-      </tr>
-    `;
-  });
+      </td>
 
+    </tr>
+
+  `;
+});
+  
   html += `
       </tbody>
     </table>
