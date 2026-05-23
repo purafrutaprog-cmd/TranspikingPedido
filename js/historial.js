@@ -83,16 +83,18 @@ document.getElementById("resumenDia").innerHTML = `
 
 `;
   data.forEach(p => {
+  html += `
+  <tr onclick="cargarPedido(${p.id})"
+      style="cursor:pointer">
 
-    html += `
-      <tr>
-        <td>${p.numero_pedido || ""}</td>
-        <td>${p.cliente_direccion || ""}</td>
-        <td>${p.fecha || ""}</td>
-        <td>${eur(p.total || 0)}</td>
-        <td>
-          ${p.requiere_factura ? "SI" : "NO"}
-        </td>
+    <td>${p.numero_pedido || ""}</td>
+    <td>${p.cliente_direccion || ""}</td>
+    <td>${p.fecha || ""}</td>
+    <td>${eur(p.total || 0)}</td>
+    <td>
+      ${p.requiere_factura ? "SI" : "NO"}
+    </td>
+`;
 
 <td>
 
@@ -353,5 +355,53 @@ ${totalRuta.toFixed(2)} €
   ventana.document.close();
 
   ventana.print();
+
+}
+
+async function cargarPedido(id){
+
+  const { data, error } = await supabase
+    .from("pedidos")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if(error){
+
+    console.log(error);
+
+    alert("Error cargando pedido");
+
+    return;
+  }
+
+  pedidoActualId = data.id;
+
+  pedido = data.productos || [];
+
+  document.getElementById("cliNombre").value =
+    data.cliente_nombre || "";
+
+  document.getElementById("cliDireccion").value =
+    data.cliente_direccion || "";
+
+  document.getElementById("cliTelefono").value =
+    data.cliente_telefono || "";
+
+  document.getElementById("cliCIF").value =
+    data.cliente_cif || "";
+
+  document.getElementById("pedidoNum").value =
+    data.numero_pedido || "";
+
+  document.getElementById("facturaNum").value =
+    data.numero_factura || "";
+
+  document.getElementById("requiereFactura").checked =
+    data.requiere_factura || false;
+
+  renderPedidoTabla();
+
+  cambiarTab("pedido");
 
 }
