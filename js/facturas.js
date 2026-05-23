@@ -34,9 +34,9 @@ async function finalizarPedido(){
 if(requiereFactura){
   cambiarTab("factura");
   renderDocumento(true);
+	}
 }
-  }
-}
+
 
 function renderDocumento(esFactura){
   const area = document.getElementById(esFactura ? "printFactura" : "printHoja");
