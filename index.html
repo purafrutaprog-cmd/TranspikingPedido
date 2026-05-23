@@ -15,7 +15,6 @@
 <div class="tabs no-print">
   <div class="tab active" data-tab="pedido" onclick="cambiarTab('pedido')">Pedido</div>
   <div class="tab" data-tab="hoja" onclick="cambiarTab('hoja')">Hoja de pedido</div>
-  <div class="tab" data-tab="factura" onclick="cambiarTab('factura')">Factura</div>
   <div class="tab" data-tab="historial" onclick="cambiarTab('historial')">Historial</div>
 </div>
 
@@ -93,7 +92,7 @@
 
   <div class="btns no-print">
     <button class="ghost" onclick="addProducto()">Añadir producto</button>
-    <button class="primary" onclick="generarHoja()">Hoja de Pedido</button>
+    <button class="primary" onclick="finalizarPedido()">Finalizar pedido</button>
     <button class="danger" onclick="nuevoPedido()">Nuevo pedido</button>
   </div>
 
@@ -126,8 +125,7 @@
 
   <div class="btns no-print">
     <button class="print" onclick="window.print()">Imprimir / Descargar PDF</button>
-    <button class="ghost" onclick="cambiarTab('pedido')">Volver</button>
-    <button class="primary" onclick="generarFactura()">Ir a factura</button>
+    <button class="ghost" onclick="cambiarTab('pedido')">Volver</button>3
     <button class="danger" onclick="nuevoPedido()">Nuevo pedido</button>
   </div>
 </section>
