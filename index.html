@@ -24,6 +24,13 @@
   <div class="muted">Rellena cliente, añade productos y luego genera hoja de pedido.</div>
 
   <h3 style="margin-top:14px">Cliente</h3>
+
+	<!-- AQUÍ -->
+	<label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+ 	 <input type="checkbox" id="requiereFactura">
+ 	 Este pedido requiere factura
+	</label>
+	
 <label>Buscar cliente</label>
 
 <input
@@ -115,10 +122,7 @@
 	  
   <label>Número de factura</label>
   <input id="facturaNum" placeholder="Ej: 2024-001">
-	  <label style="margin-top:10px;display:flex;gap:8px;align-items:center">
-  <input type="checkbox" id="requiereFactura">
-  Este pedido requiere factura
-</label>
+
   </div>
   <h2>Hoja de pedido</h2>
   <div id="printHoja"></div>
