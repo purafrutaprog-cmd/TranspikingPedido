@@ -105,11 +105,11 @@ function renderClientes(){
   if(e.target.id === "selCliente"){
 
     const clienteId = e.target.value;
+const cli = CLIENTES.find(c => c.id == clienteId);
 
-    const cli = CLIENTES.find(c => c.id == clienteId);
-	  clienteEditando = cli.id;
+if(!cli) return;
 
-    if(!cli) return;
+clienteEditando = cli.id;
 
     document.getElementById("cliNombre").value = cli.nombre || "";
     document.getElementById("cliDireccion").value = cli.direccion || "";
