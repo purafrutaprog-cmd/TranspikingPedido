@@ -20,7 +20,24 @@ async function cargarCatalogo(){
 
   CATALOGO = data || [];
 
-  cargarCatalogoSelect();
+const heladosBajos = CATALOGO.filter(p =>
+  p.tipo === "Helados" &&
+  Number(p.stock) < 200
+  );
+
+if(heladosBajos.length > 0){
+
+  alert(
+    "⚠️ STOCK BAJO DE HELADOS:\n\n" +
+
+    heladosBajos
+      .map(p => `${p.nombre}: ${p.stock} unidades`)
+      .join("\n")
+  );
+
+}
+
+cargarCatalogoSelect();
 
 }
 function cargarCatalogoSelect(){
