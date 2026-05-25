@@ -1,12 +1,6 @@
 /* ========= CLIENTES ========= */
 let CLIENTES = [];
 	
-	/* ========= CARGAR STOCK GUARDADO ========= */
-const guardado = localStorage.getItem("catalogo");
-
-if(guardado){
-  CATALOGO.splice(0, CATALOGO.length, ...JSON.parse(guardado));
-}
 /* ========= CLIENTE ========= */
 
 async function addCliente(){
