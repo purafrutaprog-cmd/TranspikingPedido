@@ -129,7 +129,7 @@ async function guardarPedido() {
 function nuevoPedido() {
 
   window.pedidoGuardado = false;
-  window.pedidoId = null;
+  delete window.pedidoId;
   window.fechaPedidoActual = null;
 
   pedido = [];
