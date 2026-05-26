@@ -1,3 +1,4 @@
+let pedidoActualId = null
 /* ========= DOCUMENTOS ========= */
 async function generarNumeroPedido() {
 
