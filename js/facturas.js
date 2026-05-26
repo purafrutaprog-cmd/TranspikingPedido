@@ -30,6 +30,8 @@ if (requiereFactura) {
 
 /* ========= RENDER HOJA / FACTURA ========= */
 function renderDocumento(esFactura) {
+  const simplificada = document.getElementById("facturaSimplificada")?.checked;
+
   const area = document.getElementById(
     esFactura ? "printFactura" : "printHoja"
   );
@@ -66,6 +68,50 @@ function renderDocumento(esFactura) {
   const totalFinal = Number((base + iva).toFixed(2));
 
   /* ========= HTML PRINCIPAL ========= */
+  if (simplificada) {
+  html = `
+    <div class="factura-rapida">
+      <h2>Factura simplificada</h2>
+      <div class="ticket-info">
+        <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
+        <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
+      </div>
+
+      <table class="ticket-tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cant</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${pedido.map(l => `
+            <tr>
+              <td>${esc(l.nombre)}</td>
+              <td>${l.cantidad}</td>
+              <td>${eur(l.precio * l.cantidad)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+
+      <div class="ticket-totales">
+        <div><span>Base imponible:</span> <strong>${eur(total)}</strong></div>
+        <div><span>IVA (10%):</span> <strong>${eur(iva)}</strong></div>
+        <div class="ticket-total-final">
+          <span>Total:</span> <strong>${eur(totalFinal)}</strong>
+        </div>
+      </div>
+
+      <p class="ticket-gracias">Gracias por su compra</p>
+    </div>
+  `;
+
+  area.innerHTML = html;
+  return;
+}
+
   let html = `
 <div class="factura-header-pro">
   <div class="empresa-info">
