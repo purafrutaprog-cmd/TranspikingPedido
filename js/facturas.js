@@ -1,10 +1,12 @@
-async function finalizarPedido(){
+async function finalizarPedido() {
 
-  if(!document.getElementById("pedidoNum").value){
+  // Generar número de pedido si falta
+  if (!document.getElementById("pedidoNum").value) {
     await generarNumeroPedido();
   }
 
-  if(!window.pedidoGuardado){
+  // Guardar pedido solo una vez
+  if (!window.pedidoGuardado) {
     await guardarPedido();
     window.pedidoGuardado = true;
   }
@@ -12,152 +14,145 @@ async function finalizarPedido(){
   const requiereFactura =
     document.getElementById("requiereFactura")?.checked === true;
 
-  // SIEMPRE HOJA
+  // Siempre mostrar hoja
   cambiarTab("hoja");
   renderDocumento(false);
 
-  // FACTURA SOLO SI ESTÁ MARCADO
-  if(requiereFactura){
+  // Mostrar factura solo si está marcado
+  if (requiereFactura) {
     cambiarTab("factura");
     renderDocumento(true);
   }
 }
 
+/* ========= RENDER HOJA / FACTURA ========= */
+function renderDocumento(esFactura) {
+  const area = document.getElementById(
+    esFactura ? "printFactura" : "printHoja"
+  );
 
-function renderDocumento(esFactura){
-  const area = document.getElementById(esFactura ? "printFactura" : "printHoja");
   const numFactura = document.getElementById("facturaNum")?.value || "";
-  if(!pedido.length){
+
+  if (!pedido.length) {
     area.innerHTML = `<div class="muted">No hay productos en el pedido.</div>`;
     return;
   }
-const cliente = {
-  nombre: document.getElementById("cliNombre").value,
-  telefono: document.getElementById("cliTelefono").value,
-  direccion: document.getElementById("cliDireccion").value,
-  cp: document.getElementById("cliCP").value,
-  cif: document.getElementById("cliCIF").value,
-  fecha: window.fechaPedidoActual || hoyISO()
-};
+
+  // Datos cliente
+  const cliente = {
+    nombre: document.getElementById("cliNombre").value,
+    telefono: document.getElementById("cliTelefono").value,
+    direccion: document.getElementById("cliDireccion").value,
+    cp: document.getElementById("cliCP").value,
+    cif: document.getElementById("cliCIF").value,
+    fecha: window.fechaPedidoActual || hoyISO()
+  };
+
+  // Totales
   const { aplica, totalQty, descuento } = descuentoHelados();
-  const totalNormal = pedido.reduce((s,l)=>s + l.precio*l.cantidad, 0);
+  const totalNormal = pedido.reduce((s, l) => s + l.precio * l.cantidad, 0);
   const total = Math.max(0, totalNormal - descuento);
 
-const base = total;
-const iva = Number(
-  (total * (IVA_PCT / 100)).toFixed(2)
-);
+  const base = total;
+  const iva = Number((total * (IVA_PCT / 100)).toFixed(2));
+  const totalFinal = Number((base + iva).toFixed(2));
 
-const totalFinal = Number(
-  (base + iva).toFixed(2)
-);
+  /* ========= HTML PRINCIPAL ========= */
   let html = `
-    
 <div class="encabezado-datos">
-  
-  <!-- BOX EMPRESA -->
+
+  <!-- EMPRESA -->
   <div class="box">
     <div class="empresa-con-logo">
       <div>
         <h3 style="margin-top:0">Empresa</h3>
-        <div><strong>Transpiking W.P. Global, S.L</strong></div>
-        <div>CL San Sebastian 62 ENT 1</div>
-        <div>08030 Barcelona</div>
-        <div>CIF: B22613558</div>
-		<div>
-      <strong>Nº Pedido:</strong>
-       ${esc(document.getElementById("pedidoNum").value)}
-       </div>
+        <div><strong>${EMPRESA.nombre}</strong></div>
+        <div>${EMPRESA.direccion}</div>
+        <div>${EMPRESA.cp}</div>
+        <div>CIF: ${EMPRESA.cif}</div>
+
+        <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum").value)}</div>
         <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
-        <div><strong>Fecha:</strong> ${esc(cliente.fecha || hoyISO())}</div>
+        <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
       </div>
-    <img src="logo.png" class="logo-factura" alt="Logo empresa">
+
+      <img src="logo.png" class="logo-factura" alt="Logo empresa">
     </div>
   </div>
-  <!-- BOX CLIENTE -->
+
+  <!-- CLIENTE -->
   <div class="box">
-  <h3 style="margin-top:0">Cliente</h3>
-
-  <div><strong>${esc(cliente.nombre || "")}</strong></div>
-
-  <div>${esc(cliente.direccion || "")}</div>
-
-  <div>${esc(cliente.cp || "")}</div>
-
-  <div>CIF/NIF: ${esc(cliente.cif || "")}</div>
-
-  <div>Tel: ${esc(cliente.telefono || "")}</div>
-</div>
+    <h3 style="margin-top:0">Cliente</h3>
+    <div><strong>${esc(cliente.nombre)}</strong></div>
+    <div>${esc(cliente.direccion)}</div>
+    <div>${esc(cliente.cp)}</div>
+    <div>CIF/NIF: ${esc(cliente.cif)}</div>
+    <div>Tel: ${esc(cliente.telefono)}</div>
+  </div>
 
 </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Tipo</th>
-          <th class="right">Precio</th>
-          <th class="right">Cantidad</th>
-          <th class="right">Importe</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${pedido.map(l=>`
-          <tr>
-            <td>${esc(l.nombre)}</td>
-            <td>${esc(l.tipo)}</td>
-            <td class="right">${eur(l.precio)}</td>
-            <td class="right">${l.cantidad}</td>
-            <td class="right">${eur(l.precio*l.cantidad)}</td>
-          </tr>
-        `).join("")}
 
-        ${descuento>0 ? `
-          <tr>
-            <td>
-              <strong>Descuento promoción helados</strong>
-              <span class="pill">≥ ${HELADOS_UMBRAL} uds → ${HELADOS_PRECIO_PROMO.toFixed(2)} €/ud</span>
-              <div class="muted">Helados totales: ${totalQty}</div>
-            </td>
-            <td class="muted">Helados</td>
-            <td class="right">—</td>
-            <td class="right">—</td>
-            <td class="right"><strong>- ${eur(descuento)}</strong></td>
-          </tr>
-        ` : ""}
-      </tbody>
-    </table>
-  `;
+<table>
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Tipo</th>
+      <th class="right">Precio</th>
+      <th class="right">Cantidad</th>
+      <th class="right">Importe</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${pedido.map(l => `
+      <tr>
+        <td>${esc(l.nombre)}</td>
+        <td>${esc(l.tipo)}</td>
+        <td class="right">${eur(l.precio)}</td>
+        <td class="right">${l.cantidad}</td>
+        <td class="right">${eur(l.precio * l.cantidad)}</td>
+      </tr>
+    `).join("")}
 
-  if(esFactura){
-    html += `
+    ${descuento > 0 ? `
+      <tr>
+        <td>
+          <strong>Descuento promoción helados</strong>
+          <span class="pill">≥ ${HELADOS_UMBRAL} uds → ${HELADOS_PRECIO_PROMO.toFixed(2)} €/ud</span>
+          <div class="muted">Helados totales: ${totalQty}</div>
+        </td>
+        <td class="muted">Helados</td>
+        <td class="right">—</td>
+        <td class="right">—</td>
+        <td class="right"><strong>- ${eur(descuento)}</strong></td>
+      </tr>
+    ` : ""}
+  </tbody>
+</table>
+`;
 
+  /* ========= TOTALES ========= */
+  html += `
 <div class="box" style="max-width:420px;margin-left:auto">
-      <div style="display:flex;justify-content:space-between">
-        <div>Base imponible</div>
-        <div><strong>${eur(total)}</strong></div>
-      </div>
+  <div style="display:flex;justify-content:space-between">
+    <div>${esFactura ? "Base imponible" : "<strong>Total</strong>"}</div>
+    <div><strong>${eur(esFactura ? total : total)}</strong></div>
+  </div>
+`;
 
-      <div style="display:flex;justify-content:space-between">
-        <div>IVA (10%)</div>
-        <div><strong>${eur(iva)}</strong></div>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;margin-top:6px">
-        <div>Total (IVA incl.)</div>
-        <div><strong>${eur(totalFinal)}</strong></div>
-      </div>
-    </div>
-    
-    `;
-  } else {
+  if (esFactura) {
     html += `
-      <div class="box" style="max-width:420px;margin-left:auto">
-        <div style="display:flex;justify-content:space-between"><div><strong>Total</strong></div><div><strong>${eur(total)}</strong></div></div>
-      </div>
-    `;
+  <div style="display:flex;justify-content:space-between">
+    <div>IVA (10%)</div>
+    <div><strong>${eur(iva)}</strong></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:6px">
+    <div>Total (IVA incl.)</div>
+    <div><strong>${eur(totalFinal)}</strong></div>
+  </div>
+`;
   }
 
-
+  html += `</div>`;
   area.innerHTML = html;
 }
-
