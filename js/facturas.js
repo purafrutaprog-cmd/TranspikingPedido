@@ -37,7 +37,7 @@ const cliente = {
   direccion: document.getElementById("cliDireccion").value,
   cp: document.getElementById("cliCP").value,
   cif: document.getElementById("cliCIF").value,
-  fecha: hoyISO()
+  fecha: window.fechaPedidoActual || hoyISO()
 };
   const { aplica, totalQty, descuento } = descuentoHelados();
   const totalNormal = pedido.reduce((s,l)=>s + l.precio*l.cantidad, 0);
