@@ -1,149 +1,135 @@
-
-/* ========= CATÁLOGO FIJO (NO EDITABLE DESDE LA APP) ========= */
+/* ========= CATÁLOGO FIJO ========= */
 let CATALOGO = [];
-/* ========= CARGAR SELECT ========= */
-async function cargarCatalogo(){
 
-  const { data, error } = await supabase
-    .from("productos")
-    .select("*")
-    .order("nombre");
+/* ========= CARGAR CATÁLOGO ========= */
+async function cargarCatalogo() {
+  try {
+    const { data, error } = await supabase
+      .from("productos")
+      .select("*")
+      .order("nombre");
 
-  if(error){
+    if (error) throw error;
 
-    console.log(error);
+    CATALOGO = Array.isArray(data) ? data : [];
 
+    // Aviso de stock bajo
+    const heladosBajos = CATALOGO.filter(p =>
+      p.tipo === "Helados" && Number(p.stock) < 200
+    );
+
+    if (heladosBajos.length > 0) {
+      alert(
+        "⚠️ STOCK BAJO DE HELADOS:\n\n" +
+        heladosBajos
+          .map(p => `${p.nombre}: ${p.stock} unidades`)
+          .join("\n")
+      );
+    }
+
+    cargarCatalogoSelect();
+
+  } catch (err) {
+    console.error("Error cargando catálogo:", err);
     alert("Error cargando productos");
-
-    return;
   }
-
-  CATALOGO = data || [];
-
-const heladosBajos = CATALOGO.filter(p =>
-  p.tipo === "Helados" &&
-  Number(p.stock) < 200
-  );
-
-if(heladosBajos.length > 0){
-
-  alert(
-    "⚠️ STOCK BAJO DE HELADOS:\n\n" +
-
-    heladosBajos
-      .map(p => `${p.nombre}: ${p.stock} unidades`)
-      .join("\n")
-  );
-
 }
 
-cargarCatalogoSelect();
-
-}
-function cargarCatalogoSelect(){
+/* ========= SELECT DE PRODUCTOS ========= */
+function cargarCatalogoSelect() {
   const sel = document.getElementById("selProducto");
   sel.innerHTML = "";
 
-  const tipos = [...new Set(CATALOGO.map(p=>p.tipo))].sort((a,b)=>a.localeCompare(b));
-  tipos.forEach(tipo=>{
-    const og=document.createElement("optgroup");
-    og.label=tipo;
-    CATALOGO.filter(p=>p.tipo===tipo).sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(p=>{
-      const opt=document.createElement("option");
-      opt.value=p.id;
-      opt.textContent = `${p.nombre} — ${eur(p.precio)}`;
-      og.appendChild(opt);
-    });
+  const tipos = [...new Set(CATALOGO.map(p => p.tipo))]
+    .sort((a, b) => a.localeCompare(b));
+
+  tipos.forEach(tipo => {
+    const og = document.createElement("optgroup");
+    og.label = tipo;
+
+    CATALOGO
+      .filter(p => p.tipo === tipo)
+      .sort((a, b) => a.nombre.localeCompare(b.nombre))
+      .forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = `${p.nombre} — ${eur(p.precio)}`;
+        og.appendChild(opt);
+      });
+
     sel.appendChild(og);
   });
 }
 
-document
-  .getElementById("buscarProducto")
-  .addEventListener("input", function(){
+/* ========= BUSCADOR DE PRODUCTOS ========= */
+document.getElementById("buscarProducto")
+  .addEventListener("input", function () {
 
-    const texto = this.value.toLowerCase();
-
+    const texto = this.value.trim().toLowerCase();
     const filtrados = CATALOGO.filter(p =>
       p.nombre.toLowerCase().includes(texto)
     );
 
     const sel = document.getElementById("selProducto");
-
-    if(filtrados.length > 0){
-      sel.style.display = "block";
-    }else{
-      sel.style.display = "none";
-    }
+    sel.style.display = filtrados.length ? "block" : "none";
 
     renderProductosFiltrados(filtrados);
-
-});
-
-function renderProductosFiltrados(lista){
-
-  const sel = document.getElementById("selProducto");
-
-  sel.innerHTML = "";
-
-  lista.forEach(p => {
-
-    sel.innerHTML += `
-      <option value="${p.id}">
-        ${p.nombre} — ${eur(p.precio)}
-      </option>
-    `;
   });
 
+function renderProductosFiltrados(lista) {
+  const sel = document.getElementById("selProducto");
+  sel.innerHTML = lista.map(p =>
+    `<option value="${p.id}">${p.nombre} — ${eur(p.precio)}</option>`
+  ).join("");
 }
 
-/* ========= AÑADIR PRODUCTO (SUMA SI EXISTE) ========= */
-async function addProducto(){
+/* ========= AÑADIR PRODUCTO ========= */
+async function addProducto() {
   const id = document.getElementById("selProducto").value;
   const cant = parseInt(document.getElementById("selCantidad").value || "0", 10);
-  if(!id || !cant || cant < 1) return;
 
-  const prod = CATALOGO.find(p=>p.id===id);
-  if(!prod) return;
+  if (!id || cant < 1) return;
 
-// ✅ CONTROL DE STOCK
-if(false){
-  alert("No hay suficiente stock");
-  return;
-}
-	
-  const existente = pedido.find(l=>l.id===id);
-  if(existente){
+  const prod = CATALOGO.find(p => p.id === id);
+  if (!prod) return;
+
+  // Control de stock
+  if (prod.stock < cant) {
+    alert("No hay suficiente stock");
+    return;
+  }
+
+  // Línea existente → sumar
+  const existente = pedido.find(l => l.id === id);
+  if (existente) {
     existente.cantidad += cant;
   } else {
-    pedido.push({...prod, cantidad:cant});
+    pedido.push({ ...prod, cantidad: cant });
   }
-// ✅ RESTAR STOCK
-prod.stock -= cant;
 
-const { error } = await supabase
-  .from("productos")
-  .update({
-    stock: prod.stock
-  })
-  .eq("id", prod.id);
+  // Restar stock local
+  prod.stock -= cant;
 
-if(error){
+  // Actualizar stock en BD
+  const { error } = await supabase
+    .from("productos")
+    .update({ stock: prod.stock })
+    .eq("id", prod.id);
 
-  console.log(error);
+  if (error) {
+    console.error(error);
+    alert("Error actualizando stock");
+    return;
+  }
 
-  alert("Error actualizando stock");
-
-  return;
-}
-	
   renderPedidoTabla();
 }
 
 /* ========= TABLA EDITABLE ========= */
-function renderPedidoTabla(){
+function renderPedidoTabla() {
   const cont = document.getElementById("pedidoTabla");
-  if(!pedido.length){
+
+  if (!pedido.length) {
     cont.innerHTML = `<div class="muted">Aún no hay productos añadidos.</div>`;
     return;
   }
@@ -160,74 +146,90 @@ function renderPedidoTabla(){
       </tr>
     </thead><tbody>`;
 
-  pedido.forEach((l, idx)=>{
-    html += `<tr>
-      <td>
-        <select data-idx="${idx}" class="line-prod">
-          ${CATALOGO.map(p=>`<option value="${p.id}" ${p.id===l.id?'selected':''}>${esc(p.nombre)} — ${eur(p.precio)}</option>`).join("")}
-        </select>
-      </td>
-      <td>${esc(l.tipo)}</td>
-      <td class="right">${eur(l.precio)}</td>
-      <td class="right"><input data-idx="${idx}" class="line-cant" type="number" min="1" value="${l.cantidad}" style="max-width:120px"></td>
-      <td class="right">${eur(l.precio*l.cantidad)}</td>
-      <td class="right"><button class="danger line-del" data-idx="${idx}" style="padding:7px 10px">Eliminar</button></td>
-    </tr>`;
+  pedido.forEach((l, idx) => {
+    html += `
+      <tr>
+        <td>
+          <select data-idx="${idx}" class="line-prod">
+            ${CATALOGO.map(p =>
+              `<option value="${p.id}" ${p.id === l.id ? "selected" : ""}>
+                ${esc(p.nombre)} — ${eur(p.precio)}
+              </option>`
+            ).join("")}
+          </select>
+        </td>
+        <td>${esc(l.tipo)}</td>
+        <td class="right">${eur(l.precio)}</td>
+        <td class="right">
+          <input data-idx="${idx}" class="line-cant" type="number" min="1"
+            value="${l.cantidad}" style="max-width:120px">
+        </td>
+        <td class="right">${eur(l.precio * l.cantidad)}</td>
+        <td class="right">
+          <button class="danger line-del" data-idx="${idx}" style="padding:7px 10px">
+            Eliminar
+          </button>
+        </td>
+      </tr>`;
   });
 
   html += `</tbody></table>`;
   cont.innerHTML = html;
 
-  // eventos cantidad
-  cont.querySelectorAll(".line-cant").forEach(inp=>{
-    inp.addEventListener("input", (e)=>{
-      const i = parseInt(e.target.dataset.idx,10);
-      const v = parseInt(e.target.value||"1",10);
-		const diferencia = v - pedido[i].cantidad;
+  /* === EVENTOS === */
 
-const prod = CATALOGO.find(p => p.id === pedido[i].id);
+  // Cambiar cantidad
+  cont.querySelectorAll(".line-cant").forEach(inp => {
+    inp.addEventListener("input", (e) => {
+      const i = Number(e.target.dataset.idx);
+      const nueva = Number(e.target.value || 1);
+      const anterior = pedido[i].cantidad;
+      const diferencia = nueva - anterior;
 
-if(prod.stock < diferencia){
-  alert("No hay suficiente stock");
-  e.target.value = pedido[i].cantidad;
-  return;
-}
+      const prod = CATALOGO.find(p => p.id === pedido[i].id);
 
-prod.stock -= diferencia;
-      pedido[i].cantidad = Math.max(1, isNaN(v)?1:v);
+      if (prod.stock < diferencia) {
+        alert("No hay suficiente stock");
+        e.target.value = anterior;
+        return;
+      }
+
+      prod.stock -= diferencia;
+      pedido[i].cantidad = Math.max(1, nueva);
+
       renderPedidoTabla();
     });
   });
 
-  // eventos eliminar
-  cont.querySelectorAll(".line-del").forEach(btn=>{
-    btn.addEventListener("click",(e)=>{
-      const i = parseInt(e.target.dataset.idx,10);
-      pedido.splice(i,1);
+  // Eliminar línea
+  cont.querySelectorAll(".line-del").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const i = Number(e.target.dataset.idx);
+      pedido.splice(i, 1);
       renderPedidoTabla();
     });
   });
 
-  // eventos cambiar producto (y fusionar si ya existe)
-  cont.querySelectorAll(".line-prod").forEach(sel=>{
-    sel.addEventListener("change",(e)=>{
-      const i = parseInt(e.target.dataset.idx,10);
+  // Cambiar producto
+  cont.querySelectorAll(".line-prod").forEach(sel => {
+    sel.addEventListener("change", (e) => {
+      const i = Number(e.target.dataset.idx);
       const nuevoId = e.target.value;
-      const prod = CATALOGO.find(p=>p.id===nuevoId);
-      if(!prod) return;
+      const prod = CATALOGO.find(p => p.id === nuevoId);
+      if (!prod) return;
 
       const cantidad = pedido[i].cantidad;
-      // si ya hay otra línea con ese producto, fusionar
-      const j = pedido.findIndex((x, idx)=> idx!==i && x.id===nuevoId);
-      if(j >= 0){
+
+      // Fusionar si ya existe
+      const j = pedido.findIndex((x, idx) => idx !== i && x.id === nuevoId);
+      if (j >= 0) {
         pedido[j].cantidad += cantidad;
-        pedido.splice(i,1);
+        pedido.splice(i, 1);
       } else {
-        pedido[i] = {...prod, cantidad};
+        pedido[i] = { ...prod, cantidad };
       }
+
       renderPedidoTabla();
     });
   });
 }
-
-
