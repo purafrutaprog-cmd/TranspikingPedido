@@ -1,5 +1,3 @@
-
-
 async function finalizarPedido(){
 
   if(!document.getElementById("pedidoNum").value){
