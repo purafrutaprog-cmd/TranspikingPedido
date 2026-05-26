@@ -1,3 +1,257 @@
+/* estilos */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root{
+  --pri:#2563eb;
+  --danger:#dc2626;
+  --bg:#f5f6f8;
+  --card:#fff;
+  --bd:#e5e7eb;
+  --tx:#111;
+  --mut:#666;
+  --r:6px;
+}
+
+/* Logo + datos empresa en la misma línea */
+.encabezado-empresa{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+}
+
+.logo-factura{
+  max-width:200px;
+  height:auto;
+}
+
+/* Alinear logo + título si quieres */
+.factura-encabezado{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  margin:0;
+  padding:18px;
+  color:var(--tx)
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  margin:0 0 14px;
+  flex-wrap:wrap
+}
+
+.tab{
+  padding:10px 14px;
+  border:1px solid var(--bd);
+  border-radius:var(--r);
+  background:#fff;
+  cursor:pointer
+}
+
+.tab.active{
+  background:var(--pri);
+  border-color:var(--pri);
+  color:#fff
+}
+
+.box{
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:var(--r);
+  padding:14px;
+  margin:0 0 12px;
+  overflow:visible
+}
+
+h2,h3{
+  margin:0 0 10px
+}
+
+label{
+  display:block;
+  margin-top:10px;
+  font-size:13px;
+  color:#374151
+}
+
+input,select,textarea{
+  width:100%;
+  max-width:100%;
+  padding:9px;
+  border:1px solid #d1d5db;
+  border-radius:var(--r);
+  margin-top:4px;
+  font-size:15px;
+  background:#fff
+}
+
+textarea{
+  min-height:70px;
+  resize:vertical
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.linea-add{
+  display:grid;
+  grid-template-columns:1fr 130px;
+  gap:10px;
+  align-items:end
+}
+
+.btns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px
+}
+
+button{
+  padding:10px 12px;
+  border:0;
+  border-radius:var(--r);
+  cursor:pointer;
+  font-size:15px;
+  background:#111;
+  color:#fff;
+  margin:0
+}
+
+button.primary{
+  background:var(--pri)
+}
+
+button.danger{
+  background:var(--danger)
+}
+
+button.ghost{
+  background:#fff;
+  color:#111;
+  border:1px solid var(--bd)
+}
+
+button.print{
+  background:#16a34a;
+  color:#fff;
+}
+
+button:hover{
+  opacity:.92
+}
+
+.muted{
+  color:var(--mut);
+  font-size:13px
+}
+
+.right{
+  text-align:right
+}
+
+.pill{
+  display:inline-block;
+  background:#eef2ff;
+  color:#3730a3;
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:12px;
+  margin-left:6px
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px
+}
+
+th,td{
+  border-bottom:1px solid #eee;
+  padding:8px;
+  vertical-align:top
+}
+
+th{
+  background:#f3f4f6;
+  text-align:left;
+  color:#374151
+}
+
+.hidden{
+  display:none
+}
+
+.encabezado-datos{
+  display:grid;
+  grid-template-columns:60% 40%;
+  gap:12px;
+}
+
+.empresa-con-logo{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.logo-factura{
+  max-width:170px;
+  width:100%;
+  height:auto;
+  object-fit:contain;
+}
+
+.titulo-factura{
+  background:linear-gradient(135deg,#111,#333);
+  color:white;
+  text-align:center;
+  padding:18px;
+  border-radius:12px;
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:5px;
+  margin-bottom:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+  border:3px solid #2563eb;
+}
+
+.factura-header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  margin-bottom:20px;
+}
+
+.logo-titulo{
+  width:90px;
+  height:auto;
+}
+
+@media (max-width: 600px){
+
+  .row{
+    grid-template-columns:1fr
+  }
+
+  .linea-add{
+    grid-template-columns:1fr
+  }
+
+  .encabezado-datos{
+    grid-template-columns:1fr;
+  }
+}
+
 /* ===========================
    ESTILOS PARA IMPRESIÓN PDF
    =========================== */
@@ -8,7 +262,6 @@
 
 @media print {
 
-  /* Ocultar elementos no imprimibles */
   .tabs,
   .no-print,
   button {
@@ -20,14 +273,12 @@
     padding: 0 !important;
   }
 
-  /* Contenedores */
   .box {
     border: 0 !important;
     border-radius: 0 !important;
     page-break-inside: avoid;
   }
 
-  /* Inputs convertidos a texto */
   input, textarea, select {
     border: none !important;
     background: transparent !important;
@@ -36,12 +287,10 @@
     font-size: 14px !important;
   }
 
-  /* Tablas sin cortes */
   table, tr, td, th {
     page-break-inside: avoid !important;
   }
 
-  /* Títulos más compactos */
   .titulo-factura {
     font-size: 28px !important;
     padding: 10px !important;
@@ -49,13 +298,45 @@
     border-width: 1px !important;
   }
 
-  /* Texto más legible */
   .muted {
     color: #444 !important;
   }
 }
 
-/* Saltos manuales */
 .page-break {
   page-break-before: always;
+}
+
+.factura-opcion{
+  margin-top: 15px;
+}
+
+.factura-box{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid #2b7cff;
+  border-radius: 10px;
+  background: #f4f8ff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.factura-box:hover{
+  background: #eaf2ff;
+}
+
+.factura-box input{
+  transform: scale(1.4);
+}
+
+.factura-texto strong{
+  font-size: 15px;
+  color: #1d4ed8;
+}
+
+.muted{
+  font-size: 12px;
+  color: #666;
 }
