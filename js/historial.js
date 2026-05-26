@@ -171,6 +171,7 @@ async function reimprimirPedido(id, abrirFactura = false){
 
   // RECUPERAR PRODUCTOS
   pedido = data.productos || [];
+  window.fechaPedidoActual = data.fecha;
 
   // RECUPERAR CLIENTE
   document.getElementById("cliNombre").value =
