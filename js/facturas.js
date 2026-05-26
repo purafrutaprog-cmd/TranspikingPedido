@@ -59,38 +59,31 @@ function renderDocumento(esFactura) {
 
   /* ========= HTML PRINCIPAL ========= */
   let html = `
-<div class="encabezado-datos">
-
-  <!-- EMPRESA -->
-  <div class="box">
-    <div class="empresa-con-logo">
-      <div>
-        <h3 style="margin-top:0">Empresa</h3>
-        <div><strong>${EMPRESA.nombre}</strong></div>
-        <div>${EMPRESA.direccion}</div>
-        <div>${EMPRESA.cp}</div>
-        <div>CIF: ${EMPRESA.cif}</div>
-
-        <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum").value)}</div>
-        <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
-        <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
-      </div>
-
-      <img src="logo.png" class="logo-factura" alt="Logo empresa">
-    </div>
+<div class="factura-header-pro">
+  <div class="empresa-info">
+    <h2>Transpiking W.P. Global, S.L</h2>
+    <div>CL San Sebastian 62 ENT 1</div>
+    <div>08030 Barcelona</div>
+    <div>CIF: B22613558</div>
+    <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum").value)}</div>
+    <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
+    <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
   </div>
 
-  <!-- CLIENTE -->
-  <div class="box">
-    <h3 style="margin-top:0">Cliente</h3>
-    <div><strong>${esc(cliente.nombre)}</strong></div>
-    <div>${esc(cliente.direccion)}</div>
-    <div>${esc(cliente.cp)}</div>
-    <div>CIF/NIF: ${esc(cliente.cif)}</div>
-    <div>Tel: ${esc(cliente.telefono)}</div>
+  <div class="empresa-logo">
+    <img src="logo.png" alt="Logo empresa">
   </div>
-
 </div>
+
+<div class="box cliente-box">
+  <h3>Datos del cliente</h3>
+  <div><strong>${esc(cliente.nombre)}</strong></div>
+  <div>${esc(cliente.direccion)}</div>
+  <div>${esc(cliente.cp)}</div>
+  <div>CIF/NIF: ${esc(cliente.cif)}</div>
+  <div>Tel: ${esc(cliente.telefono)}</div>
+</div>
+
 
 <table>
   <thead>
