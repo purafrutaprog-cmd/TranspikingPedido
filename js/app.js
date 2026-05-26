@@ -38,10 +38,11 @@ function hoyISO(){
 /* ========= APP ========= */
 document.addEventListener("DOMContentLoaded", ()=>{
 
+  cargarClientes();
   cargarCatalogo();
   renderPedidoTabla();
   renderClientes();
-  cargarClientes();
+  
 
 });
 
