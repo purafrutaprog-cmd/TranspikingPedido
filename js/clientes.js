@@ -1,140 +1,104 @@
 /* ========= CLIENTES ========= */
 let CLIENTES = [];
-	
-/* ========= CLIENTE ========= */
+let clienteEditando = null;
 
-async function addCliente(){
-
+/* ========= GUARDAR / EDITAR CLIENTE ========= */
+async function addCliente() {
   const nombre = document.getElementById("cliNombre").value.trim();
   const direccion = document.getElementById("cliDireccion").value.trim();
   const codigoP = document.getElementById("cliCP").value.trim();
   const telefono = document.getElementById("cliTelefono").value.trim();
   const nif = document.getElementById("cliCIF").value.trim();
 
-  if(!direccion){
-    alert("Escribe una direccion");
+  if (!direccion) {
+    alert("Escribe una dirección");
     return;
   }
 
-  let error;
+  try {
+    let res;
 
-  // EDITAR
-  if(clienteEditando){
-
-    const res = await supabase
-      .from("clientes")
-      .update({
-        nombre,
-        direccion,
-        codigoP,
-        telefono,
-        nif
-      })
-      .eq("id", clienteEditando);
-
-    error = res.error;
-
-  } else {
-
+    // EDITAR
+    if (clienteEditando) {
+      res = await supabase
+        .from("clientes")
+        .update({ nombre, direccion, codigoP, telefono, nif })
+        .eq("id", clienteEditando);
+    } 
     // NUEVO
-    const res = await supabase
+    else {
+      res = await supabase
+        .from("clientes")
+        .insert([{ nombre, direccion, codigoP, telefono, nif }]);
+    }
+
+    if (res.error) throw res.error;
+
+    await cargarClientes();
+    alert("Cliente guardado");
+
+  } catch (err) {
+    console.error("Error guardando cliente:", err);
+    alert("No se pudo guardar el cliente");
+  }
+}
+
+/* ========= CARGAR CLIENTES ========= */
+async function cargarClientes() {
+  try {
+    const { data, error } = await supabase
       .from("clientes")
-      .insert([
-        {
-          nombre,
-          direccion,
-          codigoP,
-          telefono,
-          nif
-        }
-      ]);
+      .select("*")
+      .order("direccion");
 
-    error = res.error;
+    if (error) throw error;
+
+    CLIENTES = Array.isArray(data) ? data : [];
+    renderClientes();
+
+  } catch (err) {
+    console.error("Error cargando clientes:", err);
   }
-
-  if(error){
-    console.log(error);
-    alert(error.message);
-    return;
-  }
-
-  await cargarClientes();
-
-  alert("Cliente guardado");
 }
-	
 
-	
-async function cargarClientes(){
-
-  const { data, error } = await supabase
-    .from("clientes")
-    .select("*");
-
-  if(error){
-    console.log(error);
-    return;
-  }
-
-  CLIENTES = data;
-
-  renderClientes();
-}
 /* ========= RENDER CLIENTES ========= */
-function renderClientes(){
-
+function renderClientes() {
   renderClientesFiltrados(CLIENTES);
-
 }
-	document
-  .getElementById("buscarCliente")
-  .addEventListener("input", function(){
 
-    const texto = this.value.toLowerCase();
+/* ========= BUSCADOR ========= */
+document.getElementById("buscarCliente")
+  .addEventListener("input", function () {
+    const texto = this.value.toLowerCase().trim();
 
     const filtrados = CLIENTES.filter(cli =>
-      (cli.direccion || "")
-      .toLowerCase()
-      .includes(texto)
+      (cli.direccion || "").toLowerCase().includes(texto)
     );
 
     renderClientesFiltrados(filtrados);
-});
-	document.addEventListener("change", function(e){
-
-  if(e.target.id === "selCliente"){
-
-    const clienteId = e.target.value;
-const cli = CLIENTES.find(c => c.id == clienteId);
-
-if(!cli) return;
-
-clienteEditando = cli.id;
-
-    document.getElementById("cliNombre").value = cli.nombre || "";
-    document.getElementById("cliDireccion").value = cli.direccion || "";
-    document.getElementById("cliCP").value = cli.codigoP || "";
-    document.getElementById("cliTelefono").value = cli.telefono || "";
-    document.getElementById("cliCIF").value = cli.nif || "";
-
-  }
-
-});
-
-	function renderClientesFiltrados(lista){
-
-  const sel = document.getElementById("selCliente");
-
-  sel.innerHTML = "";
-
-  lista.forEach(cli => {
-
-    sel.innerHTML += `
-      <option value="${cli.id}">
-        ${cli.direccion}
-      </option>
-    `;
   });
+
+/* ========= SELECCIONAR CLIENTE ========= */
+document.addEventListener("change", function (e) {
+  if (e.target.id !== "selCliente") return;
+
+  const clienteId = e.target.value;
+  const cli = CLIENTES.find(c => c.id == clienteId);
+  if (!cli) return;
+
+  clienteEditando = cli.id;
+
+  document.getElementById("cliNombre").value = cli.nombre || "";
+  document.getElementById("cliDireccion").value = cli.direccion || "";
+  document.getElementById("cliCP").value = cli.codigoP || "";
+  document.getElementById("cliTelefono").value = cli.telefono || "";
+  document.getElementById("cliCIF").value = cli.nif || "";
+});
+
+/* ========= RENDER SELECT ========= */
+function renderClientesFiltrados(lista) {
+  const sel = document.getElementById("selCliente");
+  sel.innerHTML = lista
+    .map(cli => `<option value="${cli.id}">${cli.direccion}</option>`)
+    .join("");
 }
-
-
