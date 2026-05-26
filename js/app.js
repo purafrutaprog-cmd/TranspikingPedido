@@ -1,5 +1,7 @@
 // APP
-/* ========= EMPRESA ========= */
+// =========================
+//   CONFIGURACIÓN EMPRESA
+// =========================
 const EMPRESA = {
   nombre: "Transpiking W.P. Global, S.L",
   direccion: "CL san sebatian 62 ENT 1",
@@ -8,65 +10,70 @@ const EMPRESA = {
 };
 
 const IVA_PCT = 10;
-
 const HELADOS_UMBRAL = 100;
 const HELADOS_PRECIO_PROMO = 0.95;
 
-/* ========= ESTADO ========= */
+// =========================
+//        ESTADO
+// =========================
 let cliente = null;
 let clienteEditando = null;
 
-/* ========= HELPERS ========= */
-const eur = (n)=> Number(n||0).toFixed(2)+" €";
+// =========================
+//        HELPERS
+// =========================
 
-const esc = (s)=> String(s||"")
-  .replaceAll("&","&amp;")
-  .replaceAll("<","&lt;")
-  .replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;")
-  .replaceAll("'","&#039;");
+// Formatea euros
+const eur = (n) => `${Number(n || 0).toFixed(2)} €`;
 
-function hoyISO(){
-  const d=new Date();
-  const mm=String(d.getMonth()+1).padStart(2,"0");
-  const dd=String(d.getDate()).padStart(2,"0");
-  return `${d.getFullYear()}-${mm}-${dd}`;
+// Escapa HTML para evitar inyecciones
+const esc = (s) => String(s || "")
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+
+// Fecha actual en formato YYYY-MM-DD
+function hoyISO() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
 }
 
-/* ========= APP ========= */
-document.addEventListener("DOMContentLoaded", ()=>{
-
-  cargarClientes();
-  cargarCatalogo();
-  renderPedidoTabla();
-  renderClientes();
-  
-
+// =========================
+//        INICIO APP
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    cargarClientes();
+    cargarCatalogo();
+    renderPedidoTabla();
+    renderClientes();
+  } catch (err) {
+    console.error("Error inicializando la app:", err);
+    alert("Hubo un error cargando la aplicación.");
+  }
 });
 
-function cambiarTab(tab){
+// =========================
+//     CAMBIO DE TABS
+// =========================
+function cambiarTab(tab) {
 
-  document.querySelectorAll(".tab").forEach(t=>{
-    t.classList.toggle("active", t.dataset.tab===tab);
+  // Activar pestaña visual
+  document.querySelectorAll(".tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.tab === tab);
   });
 
-  document.getElementById("tab-pedido")
-    .classList.toggle("hidden", tab!=="pedido");
+  // Mostrar/ocultar secciones
+  const secciones = ["pedido", "hoja", "factura", "historial"];
+  secciones.forEach(id => {
+    const el = document.getElementById(`tab-${id}`);
+    if (el) el.classList.toggle("hidden", id !== tab);
+  });
 
-  document.getElementById("tab-hoja")
-    .classList.toggle("hidden", tab!=="hoja");
-
-  document.getElementById("tab-factura")
-    .classList.toggle("hidden", tab!=="factura");
-
-  document.getElementById("tab-historial")
-    .classList.toggle("hidden", tab!=="historial");
-
-  if(tab==="hoja") renderDocumento(false);
-
-  if(tab==="factura") renderDocumento(true);
-
-  if(tab==="historial"){
-    cargarHistorial();
-  }
+  // Render dinámico según pestaña
+  if (tab === "hoja") renderDocumento(false);
+  if (tab === "factura") renderDocumento(true);
+  if (tab === "historial") cargarHistorial();
 }
