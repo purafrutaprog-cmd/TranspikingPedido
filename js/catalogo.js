@@ -98,7 +98,7 @@ function renderProductosFiltrados(lista){
 }
 
 /* ========= AÑADIR PRODUCTO (SUMA SI EXISTE) ========= */
-function addProducto(){
+async function addProducto(){
   const id = document.getElementById("selProducto").value;
   const cant = parseInt(document.getElementById("selCantidad").value || "0", 10);
   if(!id || !cant || cant < 1) return;
