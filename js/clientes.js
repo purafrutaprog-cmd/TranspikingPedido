@@ -1,6 +1,5 @@
 /* ========= CLIENTES ========= */
 let CLIENTES = [];
-let clienteEditando = null;
 
 /* ========= GUARDAR / EDITAR CLIENTE ========= */
 async function addCliente() {
