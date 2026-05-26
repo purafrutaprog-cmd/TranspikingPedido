@@ -4,7 +4,7 @@ async function cargarHistorial() {
     const { data, error } = await supabase
       .from("pedidos")
       .select("*")
-      .order("id", { ascending: false });
+      .order("fecha", { ascending: false });  // ← AQUÍ EL CAMBIO
 
     if (error) throw error;
 
@@ -17,6 +17,7 @@ async function cargarHistorial() {
     console.error("Error cargando historial:", err);
   }
 }
+
 
 /* ========= RESUMEN DEL DÍA ========= */
 function renderResumenDia(data) {
