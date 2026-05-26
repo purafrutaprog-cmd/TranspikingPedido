@@ -19,10 +19,13 @@ async function finalizarPedido() {
   renderDocumento(false);
 
   // Mostrar factura solo si está marcado
-  if (requiereFactura) {
-    cambiarTab("factura");
-    renderDocumento(true);
+if (requiereFactura) {
+  if (!document.getElementById("facturaNum").value) {
+    await generarNumeroFactura();
   }
+  cambiarTab("factura");
+  renderDocumento(true);
+}
 }
 
 /* ========= RENDER HOJA / FACTURA ========= */
@@ -151,3 +154,36 @@ function renderDocumento(esFactura) {
   html += `</div>`;
   area.innerHTML = html;
 }
+
+async function generarNumeroFactura() {
+  const { data, error } = await supabase
+    .from("contador_facturas")
+    .select("ultimo_numero")
+    .eq("id", 1)
+    .single();
+
+  if (error) {
+    alert("Error obteniendo contador de facturas");
+    return null;
+  }
+
+  const siguiente = Number(data.ultimo_numero || 0) + 1;
+
+  const { error: updateError } = await supabase
+    .from("contador_facturas")
+    .update({ ultimo_numero: siguiente })
+    .eq("id", 1);
+
+  if (updateError) {
+    alert("Error actualizando contador de facturas");
+    return null;
+  }
+
+  const año = new Date().getFullYear();
+  const numeroFactura = `F-${año}-${String(siguiente).padStart(4, "0")}`;
+
+  document.getElementById("facturaNum").value = numeroFactura;
+
+  return numeroFactura;
+}
+
