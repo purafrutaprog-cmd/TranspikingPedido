@@ -159,6 +159,12 @@ function nuevoPedido(){
   document.getElementById("selCantidad").value = 1;
 
   document.getElementById("requiereFactura").checked = false;
+
+  window.pedidoGuardado = false;
+
+  pedidoActualId = null;
+
+  window.fechaPedidoActual = null;
   
   renderPedidoTabla();
   
