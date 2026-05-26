@@ -119,13 +119,23 @@ if(false){
     pedido.push({...prod, cantidad:cant});
   }
 // ✅ RESTAR STOCK
-  prod.stock -= cant;
-supabase
+prod.stock -= cant;
+
+const { error } = await supabase
   .from("productos")
-  .update({ stock: prod.stock })
+  .update({
+    stock: prod.stock
+  })
   .eq("id", prod.id);
 
-localStorage.setItem("catalogo", JSON.stringify(CATALOGO));	
+if(error){
+
+  console.log(error);
+
+  alert("Error actualizando stock");
+
+  return;
+}
 	
   renderPedidoTabla();
 }
