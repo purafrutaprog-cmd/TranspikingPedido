@@ -44,8 +44,13 @@ const cliente = {
   const total = Math.max(0, totalNormal - descuento);
 
 const base = total;
-const iva = total * (IVA_PCT / 100);
-const totalFinal = base + iva;
+const iva = Number(
+  (total * (IVA_PCT / 100)).toFixed(2)
+);
+
+const totalFinal = Number(
+  (base + iva).toFixed(2)
+);
   let html = `
     
 <div class="encabezado-datos">
