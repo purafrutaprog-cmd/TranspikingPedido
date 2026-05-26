@@ -1,106 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<link rel="icon" href="logo.png">
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Transpiking W.P. Global, S.L — Pedidos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transpiking W.P. Global, S.L — Pedidos</title>
 
-	<link rel="stylesheet" href="css/styles.css">
-
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-<!-- TABS -->
-<div class="tabs no-print">
-  <div class="tab active" data-tab="pedido" onclick="cambiarTab('pedido')">Pedido</div>
-  <div class="tab" data-tab="hoja" onclick="cambiarTab('hoja')">Hoja de pedido</div>
-  <div class="tab" data-tab="historial" onclick="cambiarTab('historial')">Historial</div>
-</div>
+<!-- Navegación por pestañas -->
+<nav class="tabs no-print" aria-label="Navegación principal">
+  <button class="tab active" data-tab="pedido" onclick="cambiarTab('pedido')">Pedido</button>
+  <button class="tab" data-tab="hoja" onclick="cambiarTab('hoja')">Hoja de pedido</button>
+  <button class="tab" data-tab="historial" onclick="cambiarTab('historial')">Historial</button>
+</nav>
 
 <!-- PEDIDO -->
-<section id="tab-pedido" class="box">
-  <h2>Pedido</h2>
-  <div class="muted">Rellena cliente, añade productos y luego genera hoja de pedido.</div>
+<section id="tab-pedido" class="box" aria-labelledby="titulo-pedido">
+  <h2 id="titulo-pedido">Pedido</h2>
+  <p class="muted">Rellena cliente, añade productos y luego genera hoja de pedido.</p>
 
-  <h3 style="margin-top:14px">Cliente</h3>
-	
-<label>Buscar cliente</label>
+  <h3>Cliente</h3>
 
-<input
-  type="text"
-  id="buscarCliente"
-  placeholder="Escribe dirección..."
->
+  <label for="buscarCliente">Buscar cliente</label>
+  <input type="text" id="buscarCliente" placeholder="Escribe dirección...">
 
-<select id="selCliente">
-  <option value="">Seleccionar cliente...</option>
-</select>
+  <label for="selCliente">Seleccionar cliente</label>
+  <select id="selCliente">
+    <option value="">Seleccionar cliente...</option>
+  </select>
+
   <div class="row">
     <div>
-      <label>Nombre</label>
+      <label for="cliNombre">Nombre</label>
       <input id="cliNombre" placeholder="Nombre cliente">
     </div>
+
     <div>
-      <label>Teléfono</label>
+      <label for="cliTelefono">Teléfono</label>
       <input id="cliTelefono" placeholder="Teléfono">
     </div>
   </div>
 
-  <label>Dirección</label>
+  <label for="cliDireccion">Dirección</label>
   <input id="cliDireccion" placeholder="Dirección cliente">
 
   <div class="row">
     <div>
-      <label>Código postal</label>
+      <label for="cliCP">Código postal</label>
       <input id="cliCP" placeholder="Código postal">
     </div>
+
     <div>
-      <label>CIF/NIF</label>
+      <label for="cliCIF">CIF/NIF</label>
       <input id="cliCIF" placeholder="CIF/NIF">
     </div>
   </div>
 
-  <label>Observaciones</label>
+  <label for="cliObs">Observaciones</label>
   <textarea id="cliObs" placeholder="Notas del pedido (opcional)"></textarea>
 
-<div class="btns">
-  <button type="button" onclick="addCliente()" class="primary">
-    Guardar cliente
-  </button>
-</div>
+  <div class="btns">
+    <button type="button" onclick="addCliente()" class="primary">Guardar cliente</button>
+  </div>
 
-<div class="factura-opcion">
-  <label class="factura-box">
-    <input type="checkbox" id="requiereFactura">
-
-    <div class="factura-texto">
-      <strong>🧾 Este pedido requiere factura</strong>
-      <div class="muted">
-        Se generará automáticamente la factura junto a la hoja de pedido
+  <div class="factura-opcion">
+    <label class="factura-box">
+      <input type="checkbox" id="requiereFactura">
+      <div class="factura-texto">
+        <strong>🧾 Este pedido requiere factura</strong>
+        <p class="muted">Se generará automáticamente la factura junto a la hoja de pedido</p>
       </div>
-    </div>
-  </label>
-</div>
-	
-  <h3 style="margin-top:14px">Añadir producto</h3>
+    </label>
+  </div>
+
+  <h3>Añadir producto</h3>
 
   <div class="linea-add">
-   <div>
-  <label>Producto</label>
-
-  <input
-    type="text"
-    id="buscarProducto"
-    placeholder="Buscar producto..."
-    autocomplete="off"
-  >
-
-  <select id="selProducto"></select>
-</div>
     <div>
-      <label>Cantidad</label>
+      <label for="buscarProducto">Producto</label>
+      <input type="text" id="buscarProducto" placeholder="Buscar producto..." autocomplete="off">
+      <select id="selProducto"></select>
+    </div>
+
+    <div>
+      <label for="selCantidad">Cantidad</label>
       <input id="selCantidad" type="number" min="1" value="1">
     </div>
   </div>
@@ -111,74 +98,57 @@
     <button class="danger" onclick="nuevoPedido()">Nuevo pedido</button>
   </div>
 
-  <h3 style="margin-top:14px">Productos añadidos (editable)</h3>
+  <h3>Productos añadidos (editable)</h3>
   <div id="pedidoTabla" class="muted">Aún no hay productos añadidos.</div>
 </section>
 
 <!-- HOJA -->
-<section id="tab-hoja" class="hidden box">
+<section id="tab-hoja" class="hidden box" aria-labelledby="titulo-hoja">
+  <h2 id="titulo-hoja">Hoja de pedido</h2>
+
   <div class="box no-print">
-  <label>Número de pedido</label>
-  <input id="pedidoNum" readonly>
+    <label for="pedidoNum">Número de pedido</label>
+    <input id="pedidoNum" readonly>
 
-	  <label>Fecha del pedido</label>
+    <label for="fechaPedido">Fecha del pedido</label>
+    <input type="date" id="fechaPedido">
 
-		<input
-  		type="date"
-  		id="fechaPedido"
-	  >
-	  
-  <label>Número de factura</label>
-  <input id="facturaNum" placeholder="Ej: 2024-001">
-
+    <label for="facturaNum">Número de factura</label>
+    <input id="facturaNum" placeholder="Ej: 2024-001">
   </div>
-  <h2>Hoja de pedido</h2>
+
   <div id="printHoja"></div>
 
   <div class="btns no-print">
     <button class="print" onclick="window.print()">Imprimir / Descargar PDF</button>
-    <button class="ghost" onclick="cambiarTab('pedido')">Volver</button>3
+    <button class="ghost" onclick="cambiarTab('pedido')">Volver</button>
     <button class="danger" onclick="nuevoPedido()">Nuevo pedido</button>
   </div>
 </section>
 
-<!-- FACTURA -->
-	<section id="tab-historial" class="hidden box">
+<!-- HISTORIAL -->
+<section id="tab-historial" class="hidden box" aria-labelledby="titulo-historial">
+  <h2 id="titulo-historial">Historial de pedidos</h2>
 
-  <h2>Historial de pedidos</h2>
-<div class="btns">
-
-  <button onclick="descargarRuta('Ruta 1')">
-    Descargar Ruta 1
-  </button>
-
-  <button onclick="descargarRuta('Ruta 2')">
-    Descargar Ruta 2
-  </button>
-
-	<button onclick="descargarRuta('Pendiente')">
-  		Descargar Pendientes
-	</button>
-
-</div>
-<div id="resumenDia" class="box"></div>
-
-<div class="btns no-print">
-  <button class="print" onclick="window.print()">
-    Descargar resumen PDF
-  </button>
-</div>
-		
-  <div id="historialTabla">
-    Cargando...
+  <div class="btns">
+    <button onclick="descargarRuta('Ruta 1')">Descargar Ruta 1</button>
+    <button onclick="descargarRuta('Ruta 2')">Descargar Ruta 2</button>
+    <button onclick="descargarRuta('Pendiente')">Descargar Pendientes</button>
   </div>
 
+  <div id="resumenDia" class="box"></div>
+
+  <div class="btns no-print">
+    <button class="print" onclick="window.print()">Descargar resumen PDF</button>
+  </div>
+
+  <div id="historialTabla">Cargando...</div>
 </section>
-  <section id="tab-factura" class="hidden box">
-  <div class="factura-header">
- <!-- <img src="logo.png" class="logo-titulo"> -->
-  <h1 class="titulo-factura">FACTURA</h1>
-</div>
+
+<!-- FACTURA -->
+<section id="tab-factura" class="hidden box" aria-labelledby="titulo-factura">
+  <h1 id="titulo-factura" class="titulo-factura">Factura</h1>
+
   <div id="printFactura"></div>
 
   <div class="btns no-print">
@@ -188,8 +158,8 @@
   </div>
 </section>
 
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
 <script src="js/supabase.js"></script>
 <script src="js/catalogo.js"></script>
 <script src="js/clientes.js"></script>
