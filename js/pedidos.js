@@ -1,5 +1,3 @@
-let pedidoActualId = null
-
 /* ========= PROMO HELADOS (>=100 => 0,95€/ud) ========= */
 function descuentoHelados(){
   const helados = pedido.filter(l=>String(l.tipo||"").toLowerCase()==="helados");
