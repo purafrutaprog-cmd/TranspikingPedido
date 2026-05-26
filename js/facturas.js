@@ -31,6 +31,8 @@ function renderDocumento(esFactura) {
     esFactura ? "printFactura" : "printHoja"
   );
 
+  area.className = esFactura ? "factura-doc" : "hoja-pedido";
+  
   const numFactura = document.getElementById("facturaNum")?.value || "";
 
   if (!pedido.length) {
