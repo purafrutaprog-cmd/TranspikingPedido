@@ -53,6 +53,9 @@ function renderDocumento(esFactura) {
     fecha: window.fechaPedidoActual || hoyISO()
   };
 
+  const simplificada = document.getElementById("facturaSimplificada")?.checked;
+
+  
   // Totales
   const { aplica, totalQty, descuento } = descuentoHelados();
   const totalNormal = pedido.reduce((s, l) => s + l.precio * l.cantidad, 0);
@@ -80,6 +83,7 @@ function renderDocumento(esFactura) {
   </div>
 </div>
 
+${simplificada ? "" : `
 <div class="box cliente-box">
   <h3>Datos del cliente</h3>
   <div><strong>${esc(cliente.nombre)}</strong></div>
@@ -88,7 +92,7 @@ function renderDocumento(esFactura) {
   <div>CIF/NIF: ${esc(cliente.cif)}</div>
   <div>Tel: ${esc(cliente.telefono)}</div>
 </div>
-
+`}
 
 <table>
   <thead>
