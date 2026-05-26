@@ -19,17 +19,20 @@ async function finalizarPedido() {
   renderDocumento(false);
 
   // Mostrar factura solo si está marcado
-if (requiereFactura) {
-  if (!document.getElementById("facturaNum").value) {
-    await generarNumeroFactura();
+  if (requiereFactura) {
+    if (!document.getElementById("facturaNum").value) {
+      await generarNumeroFactura();
+    }
+    cambiarTab("factura");
+    renderDocumento(true);
   }
-  cambiarTab("factura");
-  renderDocumento(true);
 }
-}
+
 
 /* ========= RENDER HOJA / FACTURA ========= */
 function renderDocumento(esFactura) {
+
+  // SOLO UNA VEZ — ESTA ES LA CORRECTA
   const simplificada = document.getElementById("facturaSimplificada")?.checked;
 
   const area = document.getElementById(
@@ -37,7 +40,7 @@ function renderDocumento(esFactura) {
   );
 
   area.className = esFactura ? "factura-doc" : "hoja-pedido";
-  
+
   const numFactura = document.getElementById("facturaNum")?.value || "";
 
   if (!pedido.length) {
@@ -55,9 +58,6 @@ function renderDocumento(esFactura) {
     fecha: window.fechaPedidoActual || hoyISO()
   };
 
-  const simplificada = document.getElementById("facturaSimplificada")?.checked;
-
-  
   // Totales
   const { aplica, totalQty, descuento } = descuentoHelados();
   const totalNormal = pedido.reduce((s, l) => s + l.precio * l.cantidad, 0);
@@ -67,51 +67,55 @@ function renderDocumento(esFactura) {
   const iva = Number((total * (IVA_PCT / 100)).toFixed(2));
   const totalFinal = Number((base + iva).toFixed(2));
 
-  /* ========= HTML PRINCIPAL ========= */
-  if (simplificada) {
-  html = `
-    <div class="factura-rapida">
-      <h2>Factura simplificada</h2>
-      <div class="ticket-info">
-        <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
-        <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
-      </div>
 
-      <table class="ticket-tabla">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cant</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${pedido.map(l => `
-            <tr>
-              <td>${esc(l.nombre)}</td>
-              <td>${l.cantidad}</td>
-              <td>${eur(l.precio * l.cantidad)}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
+  /* ========= FACTURA RÁPIDA ========= */
+  if (simplificada && esFactura) {
 
-      <div class="ticket-totales">
-        <div><span>Base imponible:</span> <strong>${eur(total)}</strong></div>
-        <div><span>IVA (10%):</span> <strong>${eur(iva)}</strong></div>
-        <div class="ticket-total-final">
-          <span>Total:</span> <strong>${eur(totalFinal)}</strong>
+    let html = `
+      <div class="factura-rapida">
+        <h2>Factura simplificada</h2>
+        <div class="ticket-info">
+          <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
+          <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
         </div>
+
+        <table class="ticket-tabla">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cant</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pedido.map(l => `
+              <tr>
+                <td>${esc(l.nombre)}</td>
+                <td>${l.cantidad}</td>
+                <td>${eur(l.precio * l.cantidad)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+
+        <div class="ticket-totales">
+          <div><span>Base imponible:</span> <strong>${eur(total)}</strong></div>
+          <div><span>IVA (10%):</span> <strong>${eur(iva)}</strong></div>
+          <div class="ticket-total-final">
+            <span>Total:</span> <strong>${eur(totalFinal)}</strong>
+          </div>
+        </div>
+
+        <p class="ticket-gracias">Gracias por su compra</p>
       </div>
+    `;
 
-      <p class="ticket-gracias">Gracias por su compra</p>
-    </div>
-  `;
+    area.innerHTML = html;
+    return;
+  }
 
-  area.innerHTML = html;
-  return;
-}
 
+  /* ========= FACTURA NORMAL / HOJA ========= */
   let html = `
 <div class="factura-header-pro">
   <div class="empresa-info">
@@ -129,7 +133,7 @@ function renderDocumento(esFactura) {
   </div>
 </div>
 
-${simplificada ? "" : `
+${esFactura && !simplificada ? `
 <div class="box cliente-box">
   <h3>Datos del cliente</h3>
   <div><strong>${esc(cliente.nombre)}</strong></div>
@@ -138,8 +142,10 @@ ${simplificada ? "" : `
   <div>CIF/NIF: ${esc(cliente.cif)}</div>
   <div>Tel: ${esc(cliente.telefono)}</div>
 </div>
-`}
+` : ""}
+`;
 
+  html += `
 <table>
   <thead>
     <tr>
@@ -160,20 +166,6 @@ ${simplificada ? "" : `
         <td class="right">${eur(l.precio * l.cantidad)}</td>
       </tr>
     `).join("")}
-
-    ${descuento > 0 ? `
-      <tr>
-        <td>
-          <strong>Descuento promoción helados</strong>
-          <span class="pill">≥ ${HELADOS_UMBRAL} uds → ${HELADOS_PRECIO_PROMO.toFixed(2)} €/ud</span>
-          <div class="muted">Helados totales: ${totalQty}</div>
-        </td>
-        <td class="muted">Helados</td>
-        <td class="right">—</td>
-        <td class="right">—</td>
-        <td class="right"><strong>- ${eur(descuento)}</strong></td>
-      </tr>
-    ` : ""}
   </tbody>
 </table>
 `;
@@ -183,7 +175,7 @@ ${simplificada ? "" : `
 <div class="box" style="max-width:420px;margin-left:auto">
   <div style="display:flex;justify-content:space-between">
     <div>${esFactura ? "Base imponible" : "<strong>Total</strong>"}</div>
-    <div><strong>${eur(esFactura ? total : total)}</strong></div>
+    <div><strong>${eur(total)}</strong></div>
   </div>
 `;
 
@@ -204,36 +196,3 @@ ${simplificada ? "" : `
   html += `</div>`;
   area.innerHTML = html;
 }
-
-async function generarNumeroFactura() {
-  const { data, error } = await supabase
-    .from("contador_facturas")
-    .select("ultimo_numero")
-    .eq("id", 1)
-    .single();
-
-  if (error) {
-    alert("Error obteniendo contador de facturas");
-    return null;
-  }
-
-  const siguiente = Number(data.ultimo_numero || 0) + 1;
-
-  const { error: updateError } = await supabase
-    .from("contador_facturas")
-    .update({ ultimo_numero: siguiente })
-    .eq("id", 1);
-
-  if (updateError) {
-    alert("Error actualizando contador de facturas");
-    return null;
-  }
-
-  const año = new Date().getFullYear();
-  const numeroFactura = `F-${año}-${String(siguiente).padStart(4, "0")}`;
-
-  document.getElementById("facturaNum").value = numeroFactura;
-
-  return numeroFactura;
-}
-
