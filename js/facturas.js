@@ -1,17 +1,4 @@
-/* ========= PROMO HELADOS (>=100 => 0,95€/ud) ========= */
-function descuentoHelados(){
-  const helados = pedido.filter(l=>String(l.tipo||"").toLowerCase()==="helados");
-  const totalQty = helados.reduce((s,l)=>s + Number(l.cantidad||0), 0);
 
-  if(totalQty < HELADOS_UMBRAL) return { aplica:false, totalQty, descuento:0 };
-
-  let descuento = 0;
-  for(const l of helados){
-    const diff = Number(l.precio) - HELADOS_PRECIO_PROMO;
-    if(diff > 0) descuento += diff * Number(l.cantidad||0);
-  }
-  return { aplica:true, totalQty, descuento };
-}
 
 async function finalizarPedido(){
 
