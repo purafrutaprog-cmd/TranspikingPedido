@@ -413,3 +413,27 @@ th{
   }
 }
 
+/* HOJA DE PEDIDO */
+.hoja-pedido {
+  font-size: 14px;
+  border: 2px dashed #999;
+  padding: 20px;
+  background: #fffef5;
+}
+
+.hoja-pedido h3 {
+  color: #444;
+}
+
+/* FACTURA */
+.factura-doc {
+  font-size: 15px;
+  border: 2px solid #2563eb;
+  padding: 25px;
+  background: #f8faff;
+}
+
+.factura-doc h3 {
+  color: #2563eb;
+}
+
