@@ -126,16 +126,27 @@ async function guardarPedido() {
 }
 
 async function finalizarPedido() {
-  // 1. Guardar el pedido en Supabase
-  const ok = await guardarPedido();
-  if (!ok) return;
 
-  // 2. Cambiar a la pestaña HOJA DE PEDIDO
+  // Generar número de pedido si falta
+  if (!document.getElementById("pedidoNum").value) {
+    await generarNumeroPedido();
+  }
+
+  // Guardar pedido solo una vez
+  if (!window.pedidoGuardado) {
+    await guardarPedido();
+    window.pedidoGuardado = true;
+  }
+
+  // SIEMPRE mostrar hoja de pedido
   cambiarTab("hoja");
-
-  // 3. Renderizar SIEMPRE la hoja de pedido
   renderDocumento(false);
+
+  // IMPORTANTE:
+  // NO cambiar automáticamente a factura.
+  // La factura solo se muestra cuando el usuario la pide.
 }
+
 
 
 /* ========= NUEVO PEDIDO ========= */
