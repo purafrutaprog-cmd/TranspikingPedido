@@ -83,23 +83,33 @@ function renderDocumento(esFactura) {
   }
 
 
-  /* ========= FACTURA NORMAL / HOJA ========= */
-  let html = `
-<div class="factura-header-pro" style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px;">
+ /* ========= FACTURA NORMAL / HOJA ========= */
+let html = `
+<div class="factura-header-pro" 
+     style="display:flex; justify-content:space-between; align-items:flex-start; gap:40px;">
 
-  <div class="empresa-info">
-    <h2>Transpiking W.P. Global, S.L</h2>
+  <!-- COLUMNA IZQUIERDA: EMPRESA -->
+  <div class="empresa-info" style="flex:1;">
+    <h3>Empresa</h3>
+    <div>Transpiking W.P. Global, S.L</div>
     <div>CL San Sebastian 62 ENT 1</div>
     <div>08030 Barcelona</div>
     <div>CIF: B22613558</div>
+    <br>
     <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum").value)}</div>
     <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
     <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
   </div>
 
+  <!-- COLUMNA CENTRAL: LOGO -->
+  <div class="empresa-logo" style="flex:1; text-align:center;">
+    <img src="logo.png" alt="Logo empresa" style="max-width:160px;">
+  </div>
+
+  <!-- COLUMNA DERECHA: CLIENTE -->
   ${!simplificada ? `
-  <div class="cliente-info" style="text-align:right;">
-    <h3>Datos del cliente</h3>
+  <div class="cliente-info" style="flex:1; text-align:right;">
+    <h3>Cliente</h3>
     <div><strong>${esc(cliente.nombre)}</strong></div>
     <div>${esc(cliente.direccion)}</div>
     <div>${esc(cliente.cp)}</div>
@@ -107,11 +117,6 @@ function renderDocumento(esFactura) {
     <div>Tel: ${esc(cliente.telefono)}</div>
   </div>
   ` : ""}
-
-  <div class="empresa-logo">
-    <img src="logo.png" alt="Logo empresa">
-  </div>
-
 </div>
 `;
 
