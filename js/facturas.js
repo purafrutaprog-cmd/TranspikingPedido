@@ -65,6 +65,30 @@ const cliente = {
               </tr>
             `).join("")}
           </tbody>
+
+        html += `
+
+        <div style="
+          margin-top:10px;
+          font-size:13px;
+          color:#666;
+          text-align:right;
+        ">
+
+        <div>
+            <strong>Helados:</strong> ${totalQty}
+        </div>
+
+        ${descuento > 0 ? `
+          <div>
+            <strong>Promoción aplicada:</strong>
+            - ${eur(descuento)}
+            </div>
+          ` : ""}
+
+      </div>
+      `;
+          
         </table>
 
         <div class="ticket-totales">
