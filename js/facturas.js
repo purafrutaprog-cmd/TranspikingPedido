@@ -102,7 +102,7 @@ function renderDocumento(esFactura) {
   </div>
 </div>
 
-${esFactura && !simplificada ? `
+${!simplificada ? `
 <div class="box cliente-box">
   <h3>Datos del cliente</h3>
   <div><strong>${esc(cliente.nombre)}</strong></div>
@@ -112,6 +112,7 @@ ${esFactura && !simplificada ? `
   <div>Tel: ${esc(cliente.telefono)}</div>
 </div>
 ` : ""}
+
 `;
 
   html += `
