@@ -92,12 +92,13 @@ async function generarNumeroFactura() {
 
 /* ========= GUARDAR PEDIDO ========= */
 async function guardarPedido() {
-  if (window.guardandoPedido) return false;
-window.guardandoPedido = true;
-
   try {
+    if (window.guardandoPedido) return false;
+    window.guardandoPedido = true;
+
     if (!pedido.length) {
       alert("No puedes guardar un pedido vacío");
+      window.guardandoPedido = false;
       return false;
     }
 
@@ -115,48 +116,30 @@ window.guardandoPedido = true;
     const pedidoData = {
       pedido_id: pedidoId,
       numero_pedido: document.getElementById("pedidoNum").value,
-
-      requiere_factura:
-        document.getElementById("requiereFactura").checked,
-
-      numero_factura:
-        document.getElementById("requiereFactura").checked
-          ? document.getElementById("facturaNum").value
-          : null,
-
-      cliente_nombre:
-        document.getElementById("cliNombre").value || "",
-
-      cliente_direccion:
-        document.getElementById("cliDireccion").value || "",
-
-      cliente_telefono:
-        document.getElementById("cliTelefono").value || "",
-
-      cliente_cif:
-        document.getElementById("cliCIF").value || "",
-
+      requiere_factura: document.getElementById("requiereFactura").checked,
+      numero_factura: document.getElementById("facturaNum").value || null,
+      cliente_nombre: document.getElementById("cliNombre").value || "",
+      cliente_direccion: document.getElementById("cliDireccion").value || "",
+      cliente_telefono: document.getElementById("cliTelefono").value || "",
+      cliente_cif: document.getElementById("cliCIF").value || "",
       total,
-      fecha:
-        document.getElementById("fechaPedido").value || hoyISO(),
-
+      fecha: hoyISO(),
       productos: pedido
     };
 
     const { error } = await supabase
       .from("pedidos")
-      .upsert([pedidoData], {
-        onConflict: "pedido_id"
-      });
+      .upsert([pedidoData], { onConflict: "pedido_id" });
 
     if (error) throw error;
-    window.guardandoPedido = false;
 
+    window.guardandoPedido = false;
     return true;
 
   } catch (err) {
     console.error("Error guardando pedido:", err);
     alert("Error guardando pedido");
+    window.guardandoPedido = false;
     return false;
   }
 }
@@ -164,32 +147,36 @@ window.guardandoPedido = true;
 /* ========= FINALIZAR PEDIDO ========= */
 async function finalizarPedido() {
 
-  // Generar número si falta
+  // Generar número de pedido si falta
   if (!document.getElementById("pedidoNum").value) {
     await generarNumeroPedido();
   }
+
+  // Generar número de factura si corresponde
   if (document.getElementById("requiereFactura").checked) {
-  await generarNumeroFactura();
-}
+    await generarNumeroFactura();
+  }
 
   // Guardar pedido
   await guardarPedido();
 
-  // Mostrar hoja de pedido SIEMPRE
+  // Mostrar hoja o factura
   cambiarTab("hoja");
   renderDocumento(false);
 }
 
+
 /* ========= NUEVO PEDIDO ========= */
 function nuevoPedido() {
 
-  window.pedidoGuardado = false;
-  delete window.pedidoId;
-  window.fechaPedidoActual = null;
+  window.guardandoPedido = false;
 
   pedido = [];
   cliente = null;
   clienteEditando = null;
+
+  delete window.pedidoId;
+  window.fechaPedidoActual = hoyISO();
 
   // Reset campos cliente
   ["cliNombre", "cliTelefono", "cliDireccion", "cliCP", "cliCIF", "cliObs"]
@@ -206,4 +193,5 @@ function nuevoPedido() {
   renderPedidoTabla();
   cambiarTab("pedido");
 }
+
 
