@@ -1,4 +1,3 @@
-let pedidoActualId = null;
 /* ========= CARGAR HISTORIAL ========= */
 async function cargarHistorial() {
   try {
