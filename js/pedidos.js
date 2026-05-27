@@ -135,31 +135,15 @@ async function finalizarPedido() {
   // 2. Guardar pedido
   await guardarPedido();
 
-  // 3. RECUPERAR productos desde Supabase (ESTO ES LO QUE FALTABA)
-  const { data } = await supabase
-    .from("pedidos")
-    .select("productos, fecha")
-    .eq("pedido_id", window.pedidoId)
-    .single();
+  // 3. IMPORTANTE:
+  // NO tocar los datos del cliente
+  // NO limpiar nada
+  // NO cambiar pestañas antes de renderizar
 
-  pedido = data?.productos || [];
-  window.fechaPedidoActual = data?.fecha || hoyISO();
-
-  // 4. Mostrar SIEMPRE la hoja de pedido
+  // 4. Mostrar SIEMPRE la hoja de pedido con los datos actuales del formulario
   cambiarTab("hoja");
   renderDocumento(false);
 }
-
-
-  // SIEMPRE mostrar hoja de pedido
-  cambiarTab("hoja");
-  renderDocumento(false);
-
-  // IMPORTANTE:
-  // NO cambiar automáticamente a factura.
-  // La factura solo se muestra cuando el usuario la pide.
-}
-
 
 
 /* ========= NUEVO PEDIDO ========= */
