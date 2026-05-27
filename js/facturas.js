@@ -1,34 +1,3 @@
-async function finalizarPedido() {
-
-  // Generar número de pedido si falta
-  if (!document.getElementById("pedidoNum").value) {
-    await generarNumeroPedido();
-  }
-
-  // Guardar pedido solo una vez
-  if (!window.pedidoGuardado) {
-    await guardarPedido();
-    window.pedidoGuardado = true;
-  }
-
-  const requiereFactura =
-    document.getElementById("requiereFactura")?.checked === true;
-
-  // Siempre mostrar hoja
-  cambiarTab("hoja");
-  renderDocumento(false);
-
-  // Mostrar factura solo si está marcado
-  if (requiereFactura) {
-    if (!document.getElementById("facturaNum").value) {
-      await generarNumeroFactura();
-    }
-    cambiarTab("factura");
-    renderDocumento(true);
-  }
-}
-
-
 /* ========= RENDER HOJA / FACTURA ========= */
 function renderDocumento(esFactura) {
 
