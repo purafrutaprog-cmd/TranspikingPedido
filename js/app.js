@@ -43,16 +43,27 @@ function hoyISO() {
 // =========================
 //        INICIO APP
 // =========================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
   try {
-    cargarClientes();
-    cargarCatalogo();
+
+    await cerrarRutasDiaAnterior();
+
+    await cargarClientes();
+
+    await cargarCatalogo();
+
     renderPedidoTabla();
+
     renderClientes();
+
   } catch (err) {
+
     console.error("Error inicializando la app:", err);
+
     alert("Hubo un error cargando la aplicación.");
   }
+
 });
 
 // =========================
@@ -85,4 +96,23 @@ if (tab === "historial") {
   cargarHistorial();
 }
 
+}
+async function cerrarRutasDiaAnterior(){
+
+  const hoy = hoyISO();
+
+  const { error } = await supabase
+    .from("pedidos")
+    .update({
+      ruta: "Entregado"
+    })
+    .neq("fecha", hoy)
+    .in("ruta", ["Ruta 1", "Ruta 2"]);
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  console.log("Rutas anteriores cerradas");
 }
