@@ -1,3 +1,4 @@
+let pedidoActualId = null;
 /* ========= CARGAR HISTORIAL ========= */
 async function cargarHistorial() {
   try {
@@ -130,6 +131,7 @@ async function reimprimirPedido(id, abrirFactura = false) {
 
     // Productos
     pedido = data.productos || [];
+    pedidoActualId = data.id;
     window.fechaPedidoActual = data.fecha;
 
     // Cliente
