@@ -25,7 +25,10 @@ function renderResumenDia(data) {
   const hoy = hoyISO();
 
   const pedidosHoy = data.filter(p => p.fecha === hoy);
-  const totalHoy = pedidosHoy.reduce((s, p) => s + Number(p.total || 0), 0);
+  const totalHoy = pedidosHoy.reduce(
+  (s, p) => s + Number(p.total_final || p.total || 0),
+  0
+  );
 
   const html = `
     <h3>Resumen del día</h3>
@@ -84,7 +87,7 @@ function renderTablaHistorial(data) {
       <td>${p.numero_pedido || ""}</td>
       <td>${p.cliente_direccion || ""}</td>
       <td>${p.fecha || ""}</td>
-      <td>${eur(p.total || 0)}</td>
+      <td>${eur(p.total_final || p.total || 0)}</td>
       <td>${p.requiere_factura ? "SI" : "NO"}</td>
 
       <td>
@@ -217,7 +220,7 @@ async function descargarRuta(ruta) {
 </thead>
 <tbody>
 ${data.map(p => {
-  totalRuta += Number(p.total || 0);
+  totalRuta += Number(p.total_final || p.total || 0);
   return `
 <tr>
   <td>${p.numero_pedido || ""}</td>
