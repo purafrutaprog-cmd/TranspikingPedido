@@ -287,9 +287,17 @@ th{
     font-size: 14px !important;
   }
 
-  table, tr, td, th {
-    page-break-inside: avoid !important;
-  }
+ table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: none !important;
+  padding: 6px 4px;
+}
+
 
   .titulo-factura {
     font-size: 28px !important;
