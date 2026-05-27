@@ -125,26 +125,21 @@ async function guardarPedido() {
   }
 }
 
+/* ========= FINALIZAR PEDIDO ========= */
 async function finalizarPedido() {
 
-  // 1. Generar número de pedido si falta
+  // Generar número si falta
   if (!document.getElementById("pedidoNum").value) {
     await generarNumeroPedido();
   }
 
-  // 2. Guardar pedido
+  // Guardar pedido
   await guardarPedido();
 
-  // 3. IMPORTANTE:
-  // NO tocar los datos del cliente
-  // NO limpiar nada
-  // NO cambiar pestañas antes de renderizar
-
-  // 4. Mostrar SIEMPRE la hoja de pedido con los datos actuales del formulario
+  // Mostrar hoja de pedido SIEMPRE
   cambiarTab("hoja");
   renderDocumento(false);
 }
-
 
 /* ========= NUEVO PEDIDO ========= */
 function nuevoPedido() {
@@ -174,3 +169,4 @@ function nuevoPedido() {
 
   generarNumeroPedido();
 }
+
