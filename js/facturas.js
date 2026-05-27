@@ -84,9 +84,9 @@ function renderDocumento(esFactura) {
   }
 
 
-  /* ========= FACTURA NORMAL / HOJA ========= */
-  let html = `
-<div class="factura-header-pro" style="display:flex; justify-content:space-between; gap:20px;">
+/* ========= FACTURA NORMAL / HOJA ========= */
+let html = `
+<div class="factura-header-pro" style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px;">
 
   <div class="empresa-info">
     <h2>Transpiking W.P. Global, S.L</h2>
@@ -114,8 +114,8 @@ function renderDocumento(esFactura) {
   </div>
 
 </div>
+`;
 
-` : ""}
 
 `;
 
