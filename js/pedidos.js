@@ -139,9 +139,25 @@ async function guardarPedido() {
       productos: pedido
     };
 
-    const { error } = await supabase
-      .from("pedidos")
-      .upsert([pedidoData], { onConflict: "pedido_id" });
+let error;
+
+if(pedidoActualId){
+
+  const res = await supabase
+    .from("pedidos")
+    .update(pedidoData)
+    .eq("id", pedidoActualId);
+
+  error = res.error;
+
+} else {
+
+  const res = await supabase
+    .from("pedidos")
+    .insert([pedidoData]);
+
+  error = res.error;
+}
 
     if (error) throw error;
 
