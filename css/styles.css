@@ -863,10 +863,13 @@ th{
 /* HOJA DE PEDIDO */
 .hoja-pedido {
   font-size: 14px;
-  border: 2px dashed #999;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
   padding: 20px;
   background: #fffef5;
 }
+
 
 .hoja-pedido h3 {
   color: #444;
