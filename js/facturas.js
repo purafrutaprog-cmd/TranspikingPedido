@@ -28,6 +28,7 @@ const cliente = {
 
 
   // Totales
+  const { totalQty, descuento } = descuentoHelados();
   const { descuento } = descuentoHelados();
   const totalNormal = pedido.reduce((s, l) => s + l.precio * l.cantidad, 0);
   const total = Math.max(0, totalNormal - descuento);
