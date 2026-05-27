@@ -125,6 +125,19 @@ async function guardarPedido() {
   }
 }
 
+async function finalizarPedido() {
+  // 1. Guardar el pedido en Supabase
+  const ok = await guardarPedido();
+  if (!ok) return;
+
+  // 2. Cambiar a la pestaña HOJA DE PEDIDO
+  cambiarTab("hoja");
+
+  // 3. Renderizar SIEMPRE la hoja de pedido
+  renderDocumento(false);
+}
+
+
 /* ========= NUEVO PEDIDO ========= */
 function nuevoPedido() {
 
