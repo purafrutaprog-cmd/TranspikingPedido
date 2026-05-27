@@ -79,7 +79,7 @@ function renderTablaHistorial(data) {
   `;
 
   html += data.map(p => `
-    <tr onclick="cargarPedido(${p.id})" style="cursor:pointer">
+    <tr onclick="reimprimirPedido(${p.id})" style="cursor:pointer">
       <td>${p.numero_pedido || ""}</td>
       <td>${p.cliente_direccion || ""}</td>
       <td>${p.fecha || ""}</td>
@@ -237,21 +237,4 @@ TOTAL RUTA: ${totalRuta.toFixed(2)} €
     console.error("Error descargando ruta:", err);
     alert("Error cargando ruta");
   }
-}
-
-/* ========= CARGAR PEDIDO DESDE TABLA ========= */
-function cargarPedido(data) {
-  document.getElementById("cliNombre").value = data.cliente_nombre || "";
-  document.getElementById("cliDireccion").value = data.cliente_direccion || "";
-  document.getElementById("cliTelefono").value = data.cliente_telefono || "";
-  document.getElementById("cliCIF").value = data.cliente_cif || "";
-
-  pedido = data.productos || [];
-
-  document.getElementById("requiereFactura").checked = data.requiere_factura || false;
-  document.getElementById("facturaNum").value = data.numero_factura || "";
-  document.getElementById("pedidoNum").value = data.numero_pedido || "";
-
-  renderPedidoTabla();
-  cambiarTab("pedido");
 }
