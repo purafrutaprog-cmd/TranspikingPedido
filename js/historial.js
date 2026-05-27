@@ -198,6 +198,14 @@ async function descargarRuta(ruta) {
 
 <h1>${ruta}</h1>
 
+<div style="
+  margin-bottom:20px;
+  font-size:18px;
+">
+  <strong>Fecha:</strong> ${hoyISO()}
+  <strong>Repartidor:</strong> __________
+</div>
+
 <table>
 <thead>
 <tr>
