@@ -57,6 +57,39 @@ async function generarNumeroPedido() {
   }
 }
 
+async function generarNumeroFactura() {
+  try {
+    const { data, error } = await supabase
+      .from("contador_facturas")
+      .select("ultimo_numero")
+      .eq("id", 1)
+      .single();
+
+    if (error) throw error;
+
+    const siguiente = Number(data.ultimo_numero || 0) + 1;
+
+    const { error: updateError } = await supabase
+      .from("contador_facturas")
+      .update({ ultimo_numero: siguiente })
+      .eq("id", 1);
+
+    if (updateError) throw updateError;
+
+    const año = new Date().getFullYear();
+    const numeroFactura = `${año}-${String(siguiente).padStart(3, "0")}`;
+
+    document.getElementById("facturaNum").value = numeroFactura;
+
+    return numeroFactura;
+
+  } catch (err) {
+    console.error("Error generando número de factura:", err);
+    alert("Error generando número de factura");
+    return null;
+  }
+}
+
 /* ========= GUARDAR PEDIDO ========= */
 async function guardarPedido() {
   try {
