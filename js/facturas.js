@@ -1,7 +1,6 @@
 /* ========= RENDER HOJA / FACTURA ========= */
 function renderDocumento(esFactura) {
 
-  // SOLO UNA VEZ — ESTA ES LA CORRECTA
   const simplificada = document.getElementById("facturaSimplificada")?.checked;
 
   const area = document.getElementById(
@@ -28,7 +27,7 @@ function renderDocumento(esFactura) {
   };
 
   // Totales
-  const { aplica, totalQty, descuento } = descuentoHelados();
+  const { descuento } = descuentoHelados();
   const totalNormal = pedido.reduce((s, l) => s + l.precio * l.cantidad, 0);
   const total = Math.max(0, totalNormal - descuento);
 
@@ -37,7 +36,7 @@ function renderDocumento(esFactura) {
   const totalFinal = Number((base + iva).toFixed(2));
 
 
-  /* ========= FACTURA RÁPIDA ========= */
+  /* ========= FACTURA SIMPLIFICADA ========= */
   if (simplificada && esFactura) {
 
     let html = `
@@ -84,8 +83,8 @@ function renderDocumento(esFactura) {
   }
 
 
-/* ========= FACTURA NORMAL / HOJA ========= */
-let html = `
+  /* ========= FACTURA NORMAL / HOJA ========= */
+  let html = `
 <div class="factura-header-pro" style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px;">
 
   <div class="empresa-info">
@@ -116,9 +115,6 @@ let html = `
 </div>
 `;
 
-
-`;
-
   html += `
 <table>
   <thead>
@@ -144,7 +140,6 @@ let html = `
 </table>
 `;
 
-  /* ========= TOTALES ========= */
   html += `
 <div class="box" style="max-width:420px;margin-left:auto">
   <div style="display:flex;justify-content:space-between">
@@ -170,3 +165,4 @@ let html = `
   html += `</div>`;
   area.innerHTML = html;
 }
+
