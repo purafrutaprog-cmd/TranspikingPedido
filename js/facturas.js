@@ -86,7 +86,8 @@ function renderDocumento(esFactura) {
 
   /* ========= FACTURA NORMAL / HOJA ========= */
   let html = `
-<div class="factura-header-pro">
+<div class="factura-header-pro" style="display:flex; justify-content:space-between; gap:20px;">
+
   <div class="empresa-info">
     <h2>Transpiking W.P. Global, S.L</h2>
     <div>CL San Sebastian 62 ENT 1</div>
@@ -97,20 +98,23 @@ function renderDocumento(esFactura) {
     <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
   </div>
 
+  ${!simplificada ? `
+  <div class="cliente-info" style="text-align:right;">
+    <h3>Datos del cliente</h3>
+    <div><strong>${esc(cliente.nombre)}</strong></div>
+    <div>${esc(cliente.direccion)}</div>
+    <div>${esc(cliente.cp)}</div>
+    <div>CIF/NIF: ${esc(cliente.cif)}</div>
+    <div>Tel: ${esc(cliente.telefono)}</div>
+  </div>
+  ` : ""}
+
   <div class="empresa-logo">
     <img src="logo.png" alt="Logo empresa">
   </div>
+
 </div>
 
-${!simplificada ? `
-<div class="box cliente-box">
-  <h3>Datos del cliente</h3>
-  <div><strong>${esc(cliente.nombre)}</strong></div>
-  <div>${esc(cliente.direccion)}</div>
-  <div>${esc(cliente.cp)}</div>
-  <div>CIF/NIF: ${esc(cliente.cif)}</div>
-  <div>Tel: ${esc(cliente.telefono)}</div>
-</div>
 ` : ""}
 
 `;
