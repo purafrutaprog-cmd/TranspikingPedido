@@ -113,6 +113,17 @@ async function guardarPedido() {
 
     const total = Math.max(0, totalNormal - descuento);
 
+    const requiereFactura =
+    document.getElementById("requiereFactura").checked;
+
+    const iva = requiereFactura
+    ? total * 0.10
+    : 0;
+
+    const totalFinal = Number(
+    (total + iva).toFixed(2)
+    );
+    
     const pedidoData = {
       pedido_id: pedidoId,
       numero_pedido: document.getElementById("pedidoNum").value,
