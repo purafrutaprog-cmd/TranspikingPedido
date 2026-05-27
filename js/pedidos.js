@@ -130,6 +130,9 @@ async function finalizarPedido() {
   // Generar número de pedido si falta
   if (!document.getElementById("pedidoNum").value) {
     await generarNumeroPedido();
+    // Mantener los productos en memoria después de guardar
+    pedido = [...pedido];
+
   }
 
   // Guardar pedido solo una vez
