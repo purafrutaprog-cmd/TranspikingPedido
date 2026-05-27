@@ -165,6 +165,9 @@ async function finalizarPedido() {
   if (!document.getElementById("pedidoNum").value) {
     await generarNumeroPedido();
   }
+  if (document.getElementById("requiereFactura").checked) {
+  await generarNumeroFactura();
+}
 
   // Guardar pedido
   await guardarPedido();
