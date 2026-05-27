@@ -106,9 +106,9 @@ let html = `
     <img src="logo.png" alt="Logo empresa" style="max-width:160px;">
   </div>
 
-  <!-- COLUMNA DERECHA: CLIENTE -->
+  <!-- COLUMNA DERECHA: CLIENTE (IZQUIERDA COMO QUIERES) -->
   ${!simplificada ? `
-  <div class="cliente-info" style="flex:1; text-align:right;">
+  <div class="cliente-info" style="flex:1; text-align:left;">
     <h3>Cliente</h3>
     <div><strong>${esc(cliente.nombre)}</strong></div>
     <div>${esc(cliente.direccion)}</div>
@@ -119,6 +119,7 @@ let html = `
   ` : ""}
 </div>
 `;
+
 
   html += `
 <table>
