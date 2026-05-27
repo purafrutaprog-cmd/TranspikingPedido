@@ -56,38 +56,39 @@ const cliente = {
               <th>Total</th>
             </tr>
           </thead>
-          <tbody>
-            ${pedido.map(l => `
-              <tr>
-                <td>${esc(l.nombre)}</td>
-                <td>${l.cantidad}</td>
-                <td>${eur(l.precio * l.cantidad)}</td>
-              </tr>
-            `).join("")}
-          </tbody>
+<tbody>
+  ${pedido.map(l => `
+    <tr>
+      <td>${esc(l.nombre)}</td>
+      <td>${l.cantidad}</td>
+      <td>${eur(l.precio * l.cantidad)}</td>
+    </tr>
+  `).join("")}
+</tbody>
 
-        html += `
+</table>
 
-        <div style="
-          margin-top:10px;
-          font-size:13px;
-          color:#666;
-          text-align:right;
-        ">
+<div style="
+  margin-top:10px;
+  font-size:13px;
+  color:#666;
+  text-align:right;
+">
 
-        <div>
-            <strong>Helados:</strong> ${totalQty}
-        </div>
+  <div>
+    <strong>Helados:</strong> ${totalQty}
+  </div>
 
-        ${descuento > 0 ? `
-          <div>
-            <strong>Promoción aplicada:</strong>
-            - ${eur(descuento)}
-            </div>
-          ` : ""}
+  ${descuento > 0 ? `
+    <div>
+      <strong>Promoción aplicada:</strong>
+      - ${eur(descuento)}
+    </div>
+  ` : ""}
 
-      </div>
-      `;
+</div>
+
+      
           
         </table>
 
