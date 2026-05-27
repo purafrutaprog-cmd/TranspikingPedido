@@ -101,6 +101,14 @@ async function cerrarRutasDiaAnterior(){
 
   const hoy = hoyISO();
 
+  const ultimoCierre =
+    localStorage.getItem("ultimoCierreRutas");
+
+  // YA SE HIZO HOY
+  if(ultimoCierre === hoy){
+    return;
+  }
+
   const { error } = await supabase
     .from("pedidos")
     .update({
@@ -110,9 +118,17 @@ async function cerrarRutasDiaAnterior(){
     .in("ruta", ["Ruta 1", "Ruta 2"]);
 
   if(error){
+
     console.log(error);
+
     return;
   }
+
+  // GUARDAR QUE YA SE HIZO
+  localStorage.setItem(
+    "ultimoCierreRutas",
+    hoy
+  );
 
   console.log("Rutas anteriores cerradas");
 }
