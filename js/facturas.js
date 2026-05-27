@@ -17,14 +17,15 @@ function renderDocumento(esFactura) {
   }
 
   // Datos cliente
-  const cliente = {
-    nombre: document.getElementById("cliNombre").value,
-    telefono: document.getElementById("cliTelefono").value,
-    direccion: document.getElementById("cliDireccion").value,
-    cp: document.getElementById("cliCP").value,
-    cif: document.getElementById("cliCIF").value,
-    fecha: window.fechaPedidoActual || hoyISO()
-  };
+const cliente = {
+  nombre: document.getElementById("cliNombre")?.value || "",
+  telefono: document.getElementById("cliTelefono")?.value || "",
+  direccion: document.getElementById("cliDireccion")?.value || "",
+  cp: document.getElementById("cliCP")?.value || "",
+  cif: document.getElementById("cliCIF")?.value || "",
+  fecha: window.fechaPedidoActual || hoyISO()
+};
+
 
   // Totales
   const { descuento } = descuentoHelados();
