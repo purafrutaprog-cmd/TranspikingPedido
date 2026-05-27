@@ -92,14 +92,16 @@ async function generarNumeroFactura() {
 
 /* ========= GUARDAR PEDIDO ========= */
 async function guardarPedido() {
+  if (window.guardandoPedido) return false;
+window.guardandoPedido = true;
+
   try {
     if (!pedido.length) {
       alert("No puedes guardar un pedido vacío");
       return false;
     }
 
-    const pedidoId = window.pedidoId || crypto.randomUUID();
-    window.pedidoId = pedidoId;
+    const pedidoId = crypto.randomUUID();
 
     const { descuento } = descuentoHelados();
 
@@ -148,6 +150,7 @@ async function guardarPedido() {
       });
 
     if (error) throw error;
+    window.guardandoPedido = false;
 
     return true;
 
