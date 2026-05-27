@@ -134,6 +134,7 @@ async function guardarPedido() {
       cliente_telefono: document.getElementById("cliTelefono").value || "",
       cliente_cif: document.getElementById("cliCIF").value || "",
       total,
+      total_final: totalFinal,
       fecha: hoyISO(),
       productos: pedido
     };
