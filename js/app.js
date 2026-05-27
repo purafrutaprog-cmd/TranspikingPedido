@@ -72,8 +72,17 @@ function cambiarTab(tab) {
     if (el) el.classList.toggle("hidden", id !== tab);
   });
 
-  // Render dinámico según pestaña
-  if (tab === "hoja") renderDocumento(false);
-  if (tab === "factura") renderDocumento(true);
-  if (tab === "historial") cargarHistorial();
+// Render dinámico según pestaña
+if (tab === "hoja") {
+  setTimeout(() => renderDocumento(false), 30);
+}
+
+if (tab === "factura") {
+  setTimeout(() => renderDocumento(true), 30);
+}
+
+if (tab === "historial") {
+  cargarHistorial();
+}
+
 }
