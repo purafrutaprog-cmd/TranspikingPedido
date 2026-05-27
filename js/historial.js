@@ -47,7 +47,7 @@ function renderResumenDia(data) {
           <tr>
             <td>${p.numero_pedido || ""}</td>
             <td>${p.cliente_direccion || ""}</td>
-            <td>${eur(p.total || 0)}</td>
+            <td>${eur(p.total_final || p.total)}</td>
           </tr>
         `).join("")}
       </tbody>
@@ -223,7 +223,7 @@ ${data.map(p => {
   <td>${p.numero_pedido || ""}</td>
   <td>${p.cliente_direccion || ""}</td>
   <td>${p.cliente_telefono || ""}</td>
-  <td>${Number(p.total || 0).toFixed(2)} €</td>
+  <td>${Number(p.total_final || p.total || 0).toFixed(2)} €</td>
 </tr>`;
 }).join("")}
 </tbody>
