@@ -127,33 +127,29 @@ async function guardarPedido() {
 
 async function finalizarPedido() {
 
-  // Generar número de pedido si falta
+  // 1. Generar número de pedido si falta
   if (!document.getElementById("pedidoNum").value) {
     await generarNumeroPedido();
-    // Mantener los productos en memoria después de guardar
-    pedido = [...pedido];
-
   }
 
-  // Guardar pedido solo una vez
-  if (!window.pedidoGuardado) {
-    await guardarPedido();
-    window.pedidoGuardado = true;
-  }
-  // Guardar pedido solo una vez
-if (!window.pedidoGuardado) {
-    await guardarPedido();
-    window.pedidoGuardado = true;
+  // 2. Guardar pedido
+  await guardarPedido();
 
-    // 🔥 RECUPERAR LOS PRODUCTOS DESDE SUPABASE
-    const { data } = await supabase
-      .from("pedidos")
-      .select("productos")
-      .eq("pedido_id", window.pedidoId)
-      .single();
+  // 3. RECUPERAR productos desde Supabase (ESTO ES LO QUE FALTABA)
+  const { data } = await supabase
+    .from("pedidos")
+    .select("productos, fecha")
+    .eq("pedido_id", window.pedidoId)
+    .single();
 
-    pedido = data?.productos || [];
+  pedido = data?.productos || [];
+  window.fechaPedidoActual = data?.fecha || hoyISO();
+
+  // 4. Mostrar SIEMPRE la hoja de pedido
+  cambiarTab("hoja");
+  renderDocumento(false);
 }
+
 
   // SIEMPRE mostrar hoja de pedido
   cambiarTab("hoja");
