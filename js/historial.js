@@ -4,7 +4,8 @@ async function cargarHistorial() {
     const { data, error } = await supabase
       .from("pedidos")
       .select("*")
-      .order("fecha", { ascending: false });  // ← AQUÍ EL CAMBIO
+      .order("id", { ascending: false })
+  // ← AQUÍ EL CAMBIO
 
     if (error) throw error;
 
