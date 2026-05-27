@@ -140,6 +140,20 @@ async function finalizarPedido() {
     await guardarPedido();
     window.pedidoGuardado = true;
   }
+  // Guardar pedido solo una vez
+if (!window.pedidoGuardado) {
+    await guardarPedido();
+    window.pedidoGuardado = true;
+
+    // 🔥 RECUPERAR LOS PRODUCTOS DESDE SUPABASE
+    const { data } = await supabase
+      .from("pedidos")
+      .select("productos")
+      .eq("pedido_id", window.pedidoId)
+      .single();
+
+    pedido = data?.productos || [];
+}
 
   // SIEMPRE mostrar hoja de pedido
   cambiarTab("hoja");
