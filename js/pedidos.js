@@ -202,7 +202,5 @@ function nuevoPedido() {
 
   renderPedidoTabla();
   cambiarTab("pedido");
-
-  generarNumeroPedido();
 }
 
