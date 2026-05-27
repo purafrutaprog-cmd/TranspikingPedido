@@ -102,8 +102,6 @@ async function guardarPedido() {
       return false;
     }
 
-    const pedidoId = crypto.randomUUID();
-
     const { descuento } = descuentoHelados();
 
     const totalNormal = pedido.reduce(
@@ -125,7 +123,6 @@ async function guardarPedido() {
     );
     
     const pedidoData = {
-      pedido_id: pedidoId,
       numero_pedido: document.getElementById("pedidoNum").value,
       requiere_factura: document.getElementById("requiereFactura").checked,
       numero_factura: document.getElementById("facturaNum").value || null,
