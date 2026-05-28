@@ -75,8 +75,10 @@ function renderTablaHistorial(data) {
           <th>Fecha</th>
           <th>Total</th>
           <th>Factura</th>
+          <th>Vendedor</th>
           <th>Ruta</th>
           <th>Acciones</th>
+          <th>Vendedor</th>
         </tr>
       </thead>
       <tbody>
@@ -89,6 +91,8 @@ function renderTablaHistorial(data) {
       <td>${p.fecha || ""}</td>
       <td>${eur(p.total_final || p.total || 0)}</td>
       <td>${p.requiere_factura ? "SI" : "NO"}</td>
+      <td>${p.vendedor || "-"}</td>
+
 
       <td>
         <select
@@ -141,6 +145,7 @@ async function reimprimirPedido(id, abrirFactura = false) {
 
     // Pedido
     document.getElementById("pedidoNum").value = data.numero_pedido || "";
+  
 
     // Factura
     document.getElementById("facturaNum").value = data.numero_factura || "";
