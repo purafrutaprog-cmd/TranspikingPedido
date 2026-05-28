@@ -59,29 +59,34 @@ async function generarNumeroPedido() {
 
 async function generarNumeroFactura() {
   try {
+    // 1. Obtener la última factura
     const { data, error } = await supabase
-      .from("contador_facturas")
-      .select("ultimo_numero")
-      .eq("id", 1)
-      .single();
+      .from("pedidos")
+      .select("numero_factura")
+      .not("numero_factura", "is", null)
+      .order("numero_factura", { ascending: false })
+      .limit(1);
 
     if (error) throw error;
 
-    const siguiente = Number(data.ultimo_numero || 0) + 1;
+    let nuevoNumero;
 
-    const { error: updateError } = await supabase
-      .from("contador_facturas")
-      .update({ ultimo_numero: siguiente })
-      .eq("id", 1);
+    if (!data || data.length === 0) {
+      // Primera factura del año
+      const año = new Date().getFullYear();
+      nuevoNumero = `F-${año}-0001`;
+    } else {
+      // Extraer número y sumar 1
+      const ultimo = data[0].numero_factura;
+      const partes = ultimo.split("-");
+      const num = parseInt(partes[2]) + 1;
+      nuevoNumero = `${partes[0]}-${partes[1]}-${String(num).padStart(4, "0")}`;
+    }
 
-    if (updateError) throw updateError;
+    // 2. Colocar el número en el input
+    document.getElementById("facturaNum").value = nuevoNumero;
 
-    const año = new Date().getFullYear();
-    const numeroFactura = `${año}-${String(siguiente).padStart(3, "0")}`;
-
-    document.getElementById("facturaNum").value = numeroFactura;
-
-    return numeroFactura;
+    return nuevoNumero;
 
   } catch (err) {
     console.error("Error generando número de factura:", err);
