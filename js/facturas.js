@@ -109,6 +109,8 @@ function renderDocumento(esFactura) {
     <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum")?.value || "")}</div>
     <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
     <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
+    <p><b>Vendedor:</b> ${pedido.vendedor || "No especificado"}</p>
+
   </div>
 
   <div class="empresa-logo" style="flex:1; text-align:center;">
