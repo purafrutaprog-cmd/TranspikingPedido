@@ -112,19 +112,15 @@ async function guardarPedido() {
     const total = Math.max(0, totalNormal - descuento);
 
     const requiereFactura =
-    document.getElementById("requiereFactura").checked;
+      document.getElementById("requiereFactura").checked;
 
-    const iva = requiereFactura
-    ? total * 0.10
-    : 0;
+    const iva = requiereFactura ? total * 0.10 : 0;
 
-    const totalFinal = Number(
-    (total + iva).toFixed(2)
-    );
-    
+    const totalFinal = Number((total + iva).toFixed(2));
+
     const pedidoData = {
       numero_pedido: document.getElementById("pedidoNum").value,
-      requiere_factura: document.getElementById("requiereFactura").checked,
+      requiere_factura: requiereFactura,
       numero_factura: document.getElementById("facturaNum").value || null,
       cliente_nombre: document.getElementById("cliNombre").value || "",
       cliente_direccion: document.getElementById("cliDireccion").value || "",
@@ -136,25 +132,31 @@ async function guardarPedido() {
       productos: pedido
     };
 
-let error;
+    let error;
 
-if(pedidoActualId){
+    if (pedidoActualId) {
 
-  const res = await supabase
-    .from("pedidos")
-    .update(pedidoData)
-    .eq("id", pedidoActualId);
+      const res = await supabase
+        .from("pedidos")
+        .update(pedidoData)
+        .eq("id", pedidoActualId);
 
-  error = res.error;
+      error = res.error;
 
-} else {
+    } else {
 
-  const res = await supabase
-    .from("pedidos")
-    .insert([pedidoData]);
+      const res = await supabase
+        .from("pedidos")
+        .insert([pedidoData])
+        .select("id")
+        .single();
 
-  error = res.error;
-}
+      error = res.error;
+
+      if (!error) {
+        pedidoActualId = res.data.id; // ← GUARDAR ID REAL
+      }
+    }
 
     if (error) throw error;
 
