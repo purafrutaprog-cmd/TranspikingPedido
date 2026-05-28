@@ -1,4 +1,3 @@
-/* ========= RENDER HOJA / FACTURA ========= */
 function renderDocumento(esFactura) {
 
   const simplificada = document.getElementById("facturaSimplificada")?.checked;
@@ -17,15 +16,14 @@ function renderDocumento(esFactura) {
   }
 
   // Datos cliente
-const cliente = {
-  nombre: document.getElementById("cliNombre")?.value || "",
-  telefono: document.getElementById("cliTelefono")?.value || "",
-  direccion: document.getElementById("cliDireccion")?.value || "",
-  cp: document.getElementById("cliCP")?.value || "",
-  cif: document.getElementById("cliCIF")?.value || "",
-  fecha: window.fechaPedidoActual || hoyISO()
-};
-
+  const cliente = {
+    nombre: document.getElementById("cliNombre")?.value || "",
+    telefono: document.getElementById("cliTelefono")?.value || "",
+    direccion: document.getElementById("cliDireccion")?.value || "",
+    cp: document.getElementById("cliCP")?.value || "",
+    cif: document.getElementById("cliCIF")?.value || "",
+    fecha: window.fechaPedidoActual || hoyISO()
+  };
 
   // Totales
   const { totalQty, descuento } = descuentoHelados();
@@ -43,6 +41,7 @@ const cliente = {
     let html = `
       <div class="factura-rapida">
         <h2>Factura simplificada</h2>
+
         <div class="ticket-info">
           <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
           <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
@@ -56,41 +55,27 @@ const cliente = {
               <th>Total</th>
             </tr>
           </thead>
-<tbody>
-  ${pedido.map(l => `
-    <tr>
-      <td>${esc(l.nombre)}</td>
-      <td>${l.cantidad}</td>
-      <td>${eur(l.precio * l.cantidad)}</td>
-    </tr>
-  `).join("")}
-</tbody>
-
-</table>
-
-<div style="
-  margin-top:10px;
-  font-size:13px;
-  color:#666;
-  text-align:right;
-">
-
-  <div>
-    <strong>Helados:</strong> ${totalQty}
-  </div>
-
-  ${descuento > 0 ? `
-    <div>
-      <strong>Promoción aplicada:</strong>
-      - ${eur(descuento)}
-    </div>
-  ` : ""}
-
-</div>
-
-      
-          
+          <tbody>
+            ${pedido.map(l => `
+              <tr>
+                <td>${esc(l.nombre)}</td>
+                <td>${l.cantidad}</td>
+                <td>${eur(l.precio * l.cantidad)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
         </table>
+
+        <div style="margin-top:10px; font-size:13px; color:#666; text-align:right;">
+          <div><strong>Helados:</strong> ${totalQty}</div>
+
+          ${descuento > 0 ? `
+            <div>
+              <strong>Promoción aplicada:</strong>
+              - ${eur(descuento)}
+            </div>
+          ` : ""}
+        </div>
 
         <div class="ticket-totales">
           <div><span>Base imponible:</span> <strong>${eur(total)}</strong></div>
@@ -109,12 +94,11 @@ const cliente = {
   }
 
 
- /* ========= FACTURA NORMAL / HOJA ========= */
-let html = `
+  /* ========= FACTURA NORMAL / HOJA ========= */
+  let html = `
 <div class="factura-header-pro" 
      style="display:flex; justify-content:space-between; align-items:flex-start; gap:40px;">
 
-  <!-- COLUMNA IZQUIERDA: EMPRESA -->
   <div class="empresa-info" style="flex:1;">
     <h3>Empresa</h3>
     <div>Transpiking W.P. Global, S.L</div>
@@ -122,17 +106,15 @@ let html = `
     <div>08030 Barcelona</div>
     <div>CIF: B22613558</div>
     <br>
-    <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum").value)}</div>
+    <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum")?.value || "")}</div>
     <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
     <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
   </div>
 
-  <!-- COLUMNA CENTRAL: LOGO -->
   <div class="empresa-logo" style="flex:1; text-align:center;">
-    <img src="logo.png" alt="Logo empresa" style="max-width:160px;">
+    <img src="logo.png" alt="Logo empresa" style="max-width:200px;">
   </div>
 
-  <!-- COLUMNA DERECHA: CLIENTE (IZQUIERDA COMO QUIERES) -->
   ${!simplificada ? `
   <div class="cliente-info" style="flex:1; text-align:left;">
     <h3>Cliente</h3>
@@ -145,7 +127,6 @@ let html = `
   ` : ""}
 </div>
 `;
-
 
   html += `
 <table>
@@ -197,4 +178,5 @@ let html = `
   html += `</div>`;
   area.innerHTML = html;
 }
+
 
