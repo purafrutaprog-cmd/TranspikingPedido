@@ -161,6 +161,20 @@ function renderDocumento(esFactura) {
   </div>
 `;
 
+  // CONTADOR DE HELADOS + PROMO
+html += `
+  <div style="margin-top:10px; font-size:14px; color:#444;">
+    <strong>Total helados:</strong> ${totalQty}
+  </div>
+`;
+
+if (descuento > 0) {
+  html += `
+    <div style="margin-top:5px; font-size:14px; color:#1d4ed8;">
+      <strong>Promoción aplicada:</strong> -${eur(descuento)}
+    </div>
+  `;
+}  
   if (esFactura) {
     html += `
   <div style="display:flex;justify-content:space-between">
