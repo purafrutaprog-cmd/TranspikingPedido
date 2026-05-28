@@ -134,7 +134,8 @@ async function guardarPedido() {
       total,
       total_final: totalFinal,
       fecha: hoyISO(),
-      productos: pedido
+      productos: pedido,
+      vendedor: document.getElementById("vendedor").value || null
     };
 
     let error;
