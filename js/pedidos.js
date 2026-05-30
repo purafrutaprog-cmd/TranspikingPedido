@@ -185,8 +185,11 @@ async function finalizarPedido() {
     await generarNumeroPedido();
   }
 
+  const requiereFactura = document.getElementById("requiereFactura").checked;
+  const facturaSimplificada = document.getElementById("facturaSimplificada").checked;
+
   // Generar número de factura si corresponde
-  if (document.getElementById("requiereFactura").checked) {
+  if (requiereFactura || facturaSimplificada) {
     await generarNumeroFactura();
   }
 
