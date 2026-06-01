@@ -98,7 +98,24 @@ function renderDocumento(esFactura) {
   let html = `
 <div class="factura-header-pro" 
      style="display:flex; justify-content:space-between; align-items:flex-start; gap:40px;">
+  const observaciones =
+  document.getElementById("observaciones")?.value || "";
+  if(observaciones){
 
+  html += `
+    <div class="box" style="
+      margin:15px 0;
+      padding:10px;
+      border:1px solid #ccc;
+      background:#fafafa;
+    ">
+      <strong>Observaciones:</strong><br>
+      ${esc(observaciones)}
+    </div>
+  `;
+  }
+
+  
   <div class="empresa-info" style="flex:1;">
     <h3>Empresa</h3>
     <div>Transpiking W.P. Global, S.L</div>
@@ -109,7 +126,6 @@ function renderDocumento(esFactura) {
     <div><strong>Nº Pedido:</strong> ${esc(document.getElementById("pedidoNum")?.value || "")}</div>
     <div><strong>Nº Factura:</strong> ${esc(numFactura)}</div>
     <div><strong>Fecha:</strong> ${esc(cliente.fecha)}</div>
-    <p><b>Vendedor:</b> ${pedido.vendedor || "No especificado"}</p>
 
   </div>
 
@@ -126,6 +142,7 @@ function renderDocumento(esFactura) {
     <div>CIF/NIF: ${esc(cliente.cif)}</div>
     <div>Tel: ${esc(cliente.telefono)}</div>
   </div>
+     <p><b>Vendedor:</b> ${window.vendedorActual}</p>
   ` : ""}
 </div>
 `;
