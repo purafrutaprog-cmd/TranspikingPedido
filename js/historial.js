@@ -136,6 +136,7 @@ async function reimprimirPedido(id, abrirFactura = false) {
     pedido = data.productos || [];
     pedidoActualId = data.id;
     window.fechaPedidoActual = data.fecha;
+    window.vendedorActual = data.vendedor;
 
     // Cliente
     document.getElementById("cliNombre").value = data.cliente_nombre || "";
