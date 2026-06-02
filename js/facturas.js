@@ -132,8 +132,9 @@ ${!simplificada ? `
 
   <div>
     <strong>Vendedor:</strong>
-    ${esc(window.vendedorActual || "No especificado")}
+    ${esc(document.getElementById("vendedor")?.value || window.vendedorActual || "No especificado")}
   </div>
+
 </div>
 ` : ""}
 </div>
