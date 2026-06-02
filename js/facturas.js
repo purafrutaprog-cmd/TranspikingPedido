@@ -96,8 +96,8 @@ function renderDocumento(esFactura) {
 
   /* ========= FACTURA NORMAL / HOJA ========= */
   const observaciones =
-  document.getElementById("observaciones")?.value || "";
-  let html = `
+  document.getElementById("cliObs")?.value || "";
+   let html = `
 <div class="factura-header-pro" 
      style="display:flex; justify-content:space-between; align-items:flex-start; gap:40px;">
 
@@ -118,8 +118,8 @@ function renderDocumento(esFactura) {
     <img src="logo.png" alt="Logo empresa" style="max-width:200px;">
   </div>
 
-  ${!simplificada ? `
- <div class="cliente-info" style="flex:1; text-align:left;">
+${!simplificada ? `
+<div class="cliente-info" style="flex:1; text-align:left;">
   <h3>Cliente</h3>
 
   <div><strong>${esc(cliente.nombre)}</strong></div>
@@ -134,6 +134,8 @@ function renderDocumento(esFactura) {
     <strong>Vendedor:</strong>
     ${esc(window.vendedorActual || "No especificado")}
   </div>
+</div>
+` : ""}
 </div>
 `;
 
