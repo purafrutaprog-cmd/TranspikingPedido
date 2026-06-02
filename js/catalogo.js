@@ -94,9 +94,11 @@ async function addProducto() {
   if (!prod) return;
 
   // Control de stock
-  if (prod.stock < cant) {
-    alert("No hay suficiente stock");
+  if (cantidad > producto.stock) {
+  if (!confirm(`Stock disponible: ${producto.stock}. ¿Deseas continuar igualmente?`)) {
     return;
+  }
+}
   }
 
   // Línea existente → sumar
