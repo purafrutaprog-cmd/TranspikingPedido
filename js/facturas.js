@@ -119,16 +119,21 @@ function renderDocumento(esFactura) {
   </div>
 
   ${!simplificada ? `
-  <div class="cliente-info" style="flex:1; text-align:left;">
-    <h3>Cliente</h3>
-    <div><strong>${esc(cliente.nombre)}</strong></div>
-    <div>${esc(cliente.direccion)}</div>
-    <div>${esc(cliente.cp)}</div>
-    <div>CIF/NIF: ${esc(cliente.cif)}</div>
-    <div>Tel: ${esc(cliente.telefono)}</div>
+ <div class="cliente-info" style="flex:1; text-align:left;">
+  <h3>Cliente</h3>
+
+  <div><strong>${esc(cliente.nombre)}</strong></div>
+  <div>${esc(cliente.direccion)}</div>
+  <div>${esc(cliente.cp)}</div>
+  <div>CIF/NIF: ${esc(cliente.cif)}</div>
+  <div>Tel: ${esc(cliente.telefono)}</div>
+
+  <br>
+
+  <div>
+    <strong>Vendedor:</strong>
+    ${esc(window.vendedorActual || "No especificado")}
   </div>
-   <p><b>Vendedor:</b> ${window.vendedorActual || "No especificado"}</p>
-  ` : ""}
 </div>
 `;
 
