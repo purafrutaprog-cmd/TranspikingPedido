@@ -94,12 +94,12 @@ async function addProducto() {
   if (!prod) return;
 
   // Control de stock
-  if (cantidad > producto.stock) {
-  if (!confirm(`Stock disponible: ${producto.stock}. ¿Deseas continuar igualmente?`)) {
+// Control de stock
+if (cant > prod.stock) {
+  if (!confirm(`Stock disponible: ${prod.stock}. ¿Deseas continuar igualmente?`)) {
     return;
   }
 }
-  }
 
   // Línea existente → sumar
   const existente = pedido.find(l => l.id === id);
@@ -190,11 +190,12 @@ function renderPedidoTabla() {
 
       const prod = CATALOGO.find(p => p.id === pedido[i].id);
 
-      if (prod.stock < diferencia) {
-        alert("No hay suficiente stock");
-        e.target.value = anterior;
-        return;
+    if (prod.stock < diferencia) {
+      if (!confirm("El stock será negativo. ¿Continuar?")) {
+      e.target.value = anterior;
+      return;
       }
+    }
 
       prod.stock -= diferencia;
       pedido[i].cantidad = Math.max(1, nueva);
