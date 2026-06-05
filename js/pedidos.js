@@ -64,22 +64,28 @@ async function generarNumeroFactura() {
     const { data, error } = await supabase
       .from("contador_facturas")
       .select("ultimo_numero")
-      .eq("id",1)
-      .single();
+      .eq("id", 1);
+
+    if (error) throw error;
 
 
-    if(error) throw error;
+    let ultimo = 0;
 
 
-    const nuevoNumero = Number(data.ultimo_numero) + 1;
+    if (data && data.length > 0) {
+      ultimo = Number(data[0].ultimo_numero || 0);
+    }
+
+
+    const siguiente = ultimo + 1;
 
 
     const { error:updateError } = await supabase
       .from("contador_facturas")
-      .update({
-        ultimo_numero: nuevoNumero
-      })
-      .eq("id",1);
+      .upsert({
+        id:1,
+        ultimo_numero:siguiente
+      });
 
 
     if(updateError) throw updateError;
@@ -87,14 +93,15 @@ async function generarNumeroFactura() {
 
     const año = new Date().getFullYear();
 
-    const factura =
-      `F-${año}-${String(nuevoNumero).padStart(4,"0")}`;
+    const numeroFactura =
+      `F-${año}-${String(siguiente).padStart(4,"0")}`;
 
 
-    document.getElementById("facturaNum").value = factura;
+    document.getElementById("facturaNum").value =
+      numeroFactura;
 
 
-    return factura;
+    return numeroFactura;
 
 
   } catch(e){
@@ -105,7 +112,6 @@ async function generarNumeroFactura() {
     return null;
   }
 }
-
 /* ========= GUARDAR PEDIDO ========= */
 async function guardarPedido() {
   try {
