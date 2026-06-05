@@ -64,19 +64,20 @@ async function generarNumeroFactura() {
     const { data, error } = await supabase
       .from("contador_facturas")
       .select("ultimo_numero")
-      .eq("id", 1)
+      .eq("id",1)
       .single();
 
-    if (error) throw error;
+
+    if(error) throw error;
 
 
-    const siguiente = Number(data.ultimo_numero || 0) + 1;
+    const nuevoNumero = Number(data.ultimo_numero) + 1;
 
 
     const { error:updateError } = await supabase
       .from("contador_facturas")
       .update({
-        ultimo_numero: siguiente
+        ultimo_numero: nuevoNumero
       })
       .eq("id",1);
 
@@ -86,25 +87,23 @@ async function generarNumeroFactura() {
 
     const año = new Date().getFullYear();
 
-    const numeroFactura =
-      `F-${año}-${String(siguiente).padStart(4,"0")}`;
+    const factura =
+      `F-${año}-${String(nuevoNumero).padStart(4,"0")}`;
 
 
-    document.getElementById("facturaNum").value =
-      numeroFactura;
+    document.getElementById("facturaNum").value = factura;
 
 
-    return numeroFactura;
+    return factura;
 
 
-  } catch(err){
+  } catch(e){
 
-    console.error("Error contador factura:",err);
-    alert("No se pudo generar factura");
+    console.error("Error generando factura:", e);
+    alert("Error generando número de factura");
 
     return null;
   }
-
 }
 
 /* ========= GUARDAR PEDIDO ========= */
@@ -202,10 +201,13 @@ async function finalizarPedido() {
   const facturaSimplificada = document.getElementById("facturaSimplificada").checked;
 
   // Generar número de factura si corresponde
-  if (requiereFactura || facturaSimplificada) {
-    await generarNumeroFactura();
+ if (requiereFactura || facturaSimplificada) {
+
+  if(!document.getElementById("facturaNum").value){
+      await generarNumeroFactura();
   }
 
+}
   // Guardar pedido
   await guardarPedido();
 
