@@ -136,9 +136,7 @@ async function guardarPedido() {
     const requiereFactura =
       document.getElementById("requiereFactura").checked;
 
-    const iva = requiereFactura ? total * 0.10 : 0;
-
-    const totalFinal = Number((total + iva).toFixed(2));
+    const totalFinal = total;
 
     const pedidoData = {
       numero_pedido: document.getElementById("pedidoNum").value,
