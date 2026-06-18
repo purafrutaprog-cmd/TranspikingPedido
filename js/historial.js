@@ -140,6 +140,7 @@ async function reimprimirPedido(id, abrirFactura = false) {
 
     // Cliente
     document.getElementById("cliNombre").value = data.cliente_nombre || "";
+    document.getElementById("cliCP").value = data.cliente_cp || "";
     document.getElementById("cliDireccion").value = data.cliente_direccion || "";
     document.getElementById("cliTelefono").value = data.cliente_telefono || "";
     document.getElementById("cliCIF").value = data.cliente_cif || "";
