@@ -133,8 +133,7 @@ async function guardarPedido() {
 
     const total = Math.max(0, totalNormal - descuento);
 
-    const requiereFactura =
-      document.getElementById("requiereFactura").checked;
+   const requiereFactura = true;
 
     const totalFinal = total;
 
@@ -202,8 +201,7 @@ async function finalizarPedido() {
     await generarNumeroPedido();
   }
 
-  const requiereFactura = document.getElementById("requiereFactura").checked;
-  const facturaSimplificada = document.getElementById("facturaSimplificada").checked;
+  const requiereFactura = true;
 
   // Generar número de factura si corresponde
  if (requiereFactura || facturaSimplificada) {
