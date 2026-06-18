@@ -229,22 +229,43 @@ function nuevoPedido() {
   cliente = null;
   clienteEditando = null;
 
-  delete window.pedidoId;
-  window.fechaPedidoActual = hoyISO();
-
-  // Reset campos cliente
-  ["cliNombre", "cliTelefono", "cliDireccion", "cliCP", "cliCIF", "cliObs"]
-    .forEach(id => document.getElementById(id).value = "");
-
-  // Reset pedido
-  document.getElementById("pedidoNum").value = "";
-  document.getElementById("facturaNum").value = "";
-  document.getElementById("selCantidad").value = 1;
-  document.getElementById("requiereFactura").checked = false;
-
   pedidoActualId = null;
 
+  window.fechaPedidoActual = hoyISO();
+  window.vendedorActual = "";
+
+  // Limpiar campos seguros
+  [
+    "cliNombre",
+    "cliTelefono",
+    "cliDireccion",
+    "cliCP",
+    "cliCIF",
+    "cliObs",
+    "observaciones",
+    "pedidoNum",
+    "facturaNum"
+  ].forEach(id => {
+
+    const el = document.getElementById(id);
+
+    if (el) {
+      el.value = "";
+    }
+
+  });
+
+
+  // Nuevo número automático
+  generarNumeroPedido();
+
+
+  // Factura siempre activa
+  generarNumeroFactura();
+
+
   renderPedidoTabla();
+
   cambiarTab("pedido");
 }
 
