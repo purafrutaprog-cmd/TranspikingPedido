@@ -146,6 +146,7 @@ async function guardarPedido() {
       numero_factura: document.getElementById("facturaNum").value || null,
       cliente_nombre: document.getElementById("cliNombre").value || "",
       cliente_direccion: document.getElementById("cliDireccion").value || "",
+      cliente_cp: document.getElementById("cliCP").value || "",
       cliente_telefono: document.getElementById("cliTelefono").value || "",
       cliente_cif: document.getElementById("cliCIF").value || "",
       total,
