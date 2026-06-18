@@ -151,7 +151,7 @@ async function reimprimirPedido(id, abrirFactura = false) {
 
     // Factura
     document.getElementById("facturaNum").value = data.numero_factura || "";
-    document.getElementById("requiereFactura").checked = data.requiere_factura || false;
+
 
     renderPedidoTabla();
 
