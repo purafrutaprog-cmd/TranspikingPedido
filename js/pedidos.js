@@ -140,7 +140,7 @@ async function guardarPedido() {
     const pedidoData = {
       numero_pedido: document.getElementById("pedidoNum").value,
       requiere_factura: requiereFactura,
-      numero_factura: document.getElementById("facturaNum").value || null,
+      numero_factura: document.getElementById("facturaNum").value,
       cliente_nombre: document.getElementById("cliNombre").value || "",
       cliente_direccion: document.getElementById("cliDireccion").value || "",
       cliente_cp: document.getElementById("cliCP").value || "",
