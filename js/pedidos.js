@@ -215,8 +215,8 @@ async function finalizarPedido() {
   await guardarPedido();
 
   // Mostrar hoja o factura
-  cambiarTab("hoja");
-  renderDocumento(false);
+cambiarTab("factura");
+renderDocumento(true);
 }
 
 
