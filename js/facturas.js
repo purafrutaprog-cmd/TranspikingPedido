@@ -30,10 +30,16 @@ function renderDocumento(esFactura) {
   const totalNormal = pedido.reduce((s, l) => s + l.precio * l.cantidad, 0);
   const total = Math.max(0, totalNormal - descuento);
 
-  const base = total;
-  const iva = Number((total * (IVA_PCT / 100)).toFixed(2));
-  const totalFinal = Number((base + iva).toFixed(2));
+// IVA INCLUIDO
+const totalFinal = total;
 
+const base = Number(
+  (totalFinal / (1 + IVA_PCT / 100)).toFixed(2)
+);
+
+const iva = Number(
+  (totalFinal - base).toFixed(2)
+);
 
   /* ========= FACTURA SIMPLIFICADA ========= */
   if (simplificada && esFactura) {
