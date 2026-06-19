@@ -47,8 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
 
-    await cerrarRutasDiaAnterior();
-
     await cargarClientes();
 
     await cargarCatalogo();
@@ -56,6 +54,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderPedidoTabla();
 
     renderClientes();
+
+    // cerrar rutas antiguas al abrir
+    await cerrarRutasDiaAnterior();
 
   } catch (err) {
 
