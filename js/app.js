@@ -105,31 +105,36 @@ async function cerrarRutasDiaAnterior(){
   const ultimoCierre =
     localStorage.getItem("ultimoCierreRutas");
 
-  // YA SE HIZO HOY
   if(ultimoCierre === hoy){
     return;
   }
+
+  const ayer = new Date();
+  ayer.setDate(ayer.getDate() - 1);
+
+  const fechaAyer = ayer.toISOString().split("T")[0];
+
 
   const { error } = await supabase
     .from("pedidos")
     .update({
       ruta: "Entregado"
     })
-    .neq("fecha", hoy)
+    .eq("fecha", fechaAyer)
     .in("ruta", ["Ruta 1", "Ruta 2"]);
 
+
   if(error){
-
-    console.log(error);
-
+    console.error("Error cerrando rutas:", error);
     return;
   }
 
-  // GUARDAR QUE YA SE HIZO
+
   localStorage.setItem(
     "ultimoCierreRutas",
     hoy
   );
+
 
   console.log("Rutas anteriores cerradas");
 }
